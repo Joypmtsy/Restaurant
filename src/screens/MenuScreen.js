@@ -71,7 +71,7 @@ export default function MenuScreen({ tableId = '05' }) {
       <View style={styles.darkHeader}>
         <View style={styles.headerBrand}>
           <Text style={styles.brandIcon}></Text>
-          <Text style={styles.brandTitleText}>ชื่อร้านอาหาร</Text>
+          <Text style={styles.brandTitleText}>HONEY RESTAURANT</Text>
         </View>
         <View style={styles.headerRight}>
           <View style={styles.tableBadge}>
