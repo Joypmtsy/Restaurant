@@ -1,24 +1,36 @@
-// App.js
-import React from 'react';
-import { StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useEffect  } from "react";
+import { Text,View } from "react-native";
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
-// นำเข้าหน้าเลือกอาหารที่แยกไฟล์ไว้
-import MenuScreen from './src/screens/MenuScreen';
+import { initDb } from "./src/db/database";
 
-const Stack = createNativeStackNavigator();
+function DatabaseTest() {
+  const db = useSQLiteContext();
+  
+  useEffect(() => {
+    async function setupDatabase() {
+      const result = await initDb(db);
+
+    console.log(result);
+    }
+
+    setupDatabase();
+  }, [db]
+);
+return (
+  <View 
+  style={{flex: 1, 
+  justifyContent: "center", 
+  alignItems: "center"}}>
+    <Text style={{ fontSize: 24 }}>Database Test</Text>
+  </View>
+)
+}
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar barStyle="light-content" backgroundColor="#1E293B" />
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen 
-          name="MenuScreen" 
-          component={MenuScreen} 
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SQLiteProvider databaseName="restaurant.db">
+      <DatabaseTest />
+    </SQLiteProvider>
   );
 }
