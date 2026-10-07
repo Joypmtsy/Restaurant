@@ -3,7 +3,7 @@
 const bills = [
   {
     id: 1001,
-    tableId: 1,
+    tableId: 4,
     status: 'open',
     openedAt: '2026-09-27 12:00',
     closedAt: null,
@@ -19,7 +19,7 @@ const bills = [
 
   {
     id: 1003,
-    tableId: 5,
+    tableId: 7,
     status: 'open',
     openedAt: '2026-09-27 13:00',
     closedAt: null,

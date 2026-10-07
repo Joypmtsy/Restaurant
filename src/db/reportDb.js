@@ -26,10 +26,10 @@ export async function getSalesSummary(
 
         FROM bills b
 
-        INNER JOIN order_rounds r
+        LEFT JOIN order_rounds r
           ON r.bill_id = b.bill_id
 
-        INNER JOIN order_items oi
+        LEFT JOIN order_items oi
           ON oi.round_id = r.round_id
 
         WHERE b.status = 'closed'
@@ -48,15 +48,16 @@ export async function getSalesSummary(
     };
 
   } catch (error) {
+
     console.error(
-      'getSalesSummary failed:',
+      "getSalesSummary failed:",
       error
     );
 
     return {
       ok: false,
       message:
-        'ไม่สามารถดึงสรุปยอดขายได้',
+        "ไม่สามารถดึงสรุปยอดขายได้",
     };
   }
 }

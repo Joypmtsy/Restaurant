@@ -59,9 +59,53 @@ export async function getKitchenQueue(db) {
 export async function updateOrderItemStatus(
   db,
   orderItemId,
-  status
+  nextStatus
 ) {
   try {
+
+    const item = await db.getFirstAsync(
+      `
+      SELECT
+        order_item_id,
+        status
+      FROM order_items
+      WHERE order_item_id = ?
+      `,
+      [orderItemId]
+    );
+
+    if (!item) {
+      return {
+        ok: false,
+        message: "ไม่พบรายการอาหาร",
+      };
+    }
+
+
+    // =====================================
+    // ตรวจสอบ State Transition
+    // =====================================
+
+    const allowedTransitions = {
+      waiting: "cooking",
+      cooking: "served",
+    };
+
+    if (
+      allowedTransitions[item.status] !==
+      nextStatus
+    ) {
+      return {
+        ok: false,
+        message:
+          `ไม่สามารถเปลี่ยน ${item.status} → ${nextStatus} ได้`,
+      };
+    }
+
+
+    // =====================================
+    // UPDATE STATUS
+    // =====================================
 
     await db.runAsync(
       `
@@ -70,7 +114,7 @@ export async function updateOrderItemStatus(
       WHERE order_item_id = ?
       `,
       [
-        status,
+        nextStatus,
         orderItemId,
       ]
     );
@@ -78,19 +122,20 @@ export async function updateOrderItemStatus(
     return {
       ok: true,
       message:
-        'เปลี่ยนสถานะอาหารสำเร็จ',
+        "เปลี่ยนสถานะอาหารสำเร็จ",
     };
 
   } catch (error) {
+
     console.error(
-      'updateOrderItemStatus failed:',
+      "updateOrderItemStatus failed:",
       error
     );
 
     return {
       ok: false,
       message:
-        'ไม่สามารถเปลี่ยนสถานะอาหารได้',
+        "ไม่สามารถเปลี่ยนสถานะอาหารได้",
     };
   }
 }
