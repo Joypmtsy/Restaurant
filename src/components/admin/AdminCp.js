@@ -2,22 +2,8 @@
 
 import React from "react";
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  ScrollView,
-} from "react-native";
-
-import {
-  colors,
-  spacing,
-  radius,
-  fontSize,
-  fontWeight,
-} from "../../constants/theme";
+import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView, } from "react-native";
+import { colors, spacing, radius, fontSize, fontWeight, } from "../../styles/theme";
 
 import { appStyles } from "../../styles/appStyles";
 

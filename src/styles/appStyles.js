@@ -1,16 +1,7 @@
 // src/styles/appStyles.js
 
 import { StyleSheet } from "react-native";
-
-import {
-  colors,
-  spacing,
-  radius,
-  fontSize,
-  fontWeight,
-  dimensions,
-  shadow,
-} from "../constants/theme";
+import { colors, spacing, radius, fontSize, fontWeight, dimensions, shadow, } from "./theme";
 
 export const appStyles = StyleSheet.create({
 

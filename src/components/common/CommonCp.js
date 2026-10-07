@@ -4,7 +4,7 @@ import React from "react";
 
 import { View, Text, StyleSheet, TouchableOpacity, } from "react-native";
 
-import { colors, spacing, radius, fontSize, fontWeight, dimensions, shadow, } from "../constants/theme";
+import { colors, spacing, radius, fontSize, fontWeight, dimensions, shadow, } from "../../styles/theme";
 
 /*
   ==========================================================

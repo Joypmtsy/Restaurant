@@ -8,14 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-
-import {
-  colors,
-  spacing,
-  radius,
-  fontSize,
-  fontWeight,
-} from "../../constants/theme";
+import { colors, spacing, radius, fontSize, fontWeight, } from "../../styles/theme";
 
 
 // =====================================================

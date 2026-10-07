@@ -1,183 +1,276 @@
 // src/db/orderDb.js
 
 
-// สร้างรอบการสั่งใหม่
-export async function createOrderRound(
-  db,
-  billId
-) {
+// =====================================
+// CREATE ORDER ROUND
+// =====================================
+
+export async function createOrderRound(db, billId) {
   try {
-
-    const lastRound =
-      await db.getFirstAsync(
-        `
-        SELECT
-          MAX(round_number) AS max_round
-        FROM order_rounds
-        WHERE bill_id = ?
-        `,
-        [billId]
-      );
-
-    const nextRound =
-      (lastRound?.max_round || 0) + 1;
-
-    const createdAt =
-      new Date().toISOString();
-
-    const result =
-      await db.runAsync(
-        `
-        INSERT INTO order_rounds (
-          bill_id,
-          round_number,
-          created_at
-        )
-        VALUES (?, ?, ?)
-        `,
-        [
-          billId,
-          nextRound,
-          createdAt,
-        ]
-      );
-
-    return {
-      ok: true,
-      data: {
-        roundId:
-          result.lastInsertRowId,
-        roundNumber:
-          nextRound,
-      },
-    };
-
-  } catch (error) {
-    console.error(
-      'createOrderRound failed:',
-      error
+    const result = await db.runAsync(
+      `
+      INSERT INTO order_rounds (
+        bill_id,
+        round_number,
+        created_at
+      )
+      VALUES (
+        ?,
+        (
+          SELECT COALESCE(MAX(round_number), 0) + 1
+          FROM order_rounds
+          WHERE bill_id = ?
+        ),
+        datetime('now')
+      )
+      `,
+      [billId, billId]
     );
 
     return {
+      ok: true,
+      roundId: result.lastInsertRowId,
+      message: "สร้างรอบ Order สำเร็จ",
+    };
+
+  } catch (error) {
+    console.error("createOrderRound failed:", error);
+
+    return {
       ok: false,
-      message:
-        'ไม่สามารถสร้างรอบการสั่งได้',
+      message: "ไม่สามารถสร้างรอบ Order ได้",
     };
   }
 }
 
 
-// เพิ่มรายการอาหาร
-export async function addOrderItem(
-  db,
-  roundId,
-  menuId,
-  quantity,
-  note
-) {
+// =====================================
+// ADD ORDER ITEMS
+// =====================================
+
+export async function addOrderItems(db, roundId, items) {
   try {
 
-    // ดึงราคาปัจจุบัน
-    const menu =
-      await db.getFirstAsync(
+    for (const item of items) {
+
+      // -----------------------------
+      // ดึงราคาปัจจุบันของเมนู
+      // -----------------------------
+
+      const menu = await db.getFirstAsync(
         `
         SELECT
+          m.menu_id,
           mp.price
-        FROM menu_prices mp
-        WHERE mp.menu_id = ?
+        FROM menus m
+        JOIN menu_prices mp
+          ON mp.menu_id = m.menu_id
           AND mp.end_at IS NULL
+        WHERE m.menu_id = ?
+          AND m.is_available = 1
         `,
-        [menuId]
+        [item.menuId]
       );
 
-    if (!menu) {
-      return {
-        ok: false,
-        message:
-          'ไม่พบราคาปัจจุบันของเมนู',
-      };
-    }
+      // -----------------------------
+      // ไม่พบเมนู / เมนูปิดขาย
+      // -----------------------------
 
-    const createdAt =
-      new Date().toISOString();
+      if (!menu) {
+        throw new Error(
+          `Menu ${item.menuId} is not available`
+        );
+      }
 
-    const result =
+      // -----------------------------
+      // ตรวจสอบจำนวน
+      // -----------------------------
+
+      if (
+        !Number.isInteger(item.quantity) ||
+        item.quantity <= 0
+      ) {
+        throw new Error(
+          `Invalid quantity for menu ${item.menuId}`
+        );
+      }
+
+      // -----------------------------
+      // INSERT ORDER ITEM
+      // -----------------------------
+
       await db.runAsync(
         `
         INSERT INTO order_items (
           round_id,
           menu_id,
           quantity,
-          note,
           price_at_order,
+          note,
           status,
           created_at
         )
-        VALUES (?, ?, ?, ?, ?, 'waiting', ?)
+        VALUES (
+          ?,
+          ?,
+          ?,
+          ?,
+          ?,
+          'waiting',
+          datetime('now')
+        )
         `,
         [
           roundId,
-          menuId,
-          quantity,
-          note,
+          item.menuId,
+          item.quantity,
           menu.price,
-          createdAt,
+          item.note ?? null,
         ]
       );
+    }
 
     return {
       ok: true,
-      data: {
-        orderItemId:
-          result.lastInsertRowId,
-      },
+      message: "เพิ่มรายการ Order สำเร็จ",
     };
 
   } catch (error) {
-    console.error(
-      'addOrderItem failed:',
-      error
-    );
+    console.error("addOrderItems failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถเพิ่มรายการอาหารได้',
+      message: "ไม่สามารถเพิ่มรายการ Order ได้",
     };
   }
 }
 
 
-// เพิ่มอาหารหลายรายการในรอบเดียว
-export async function addOrderItems(
+// =====================================
+// CREATE ORDER WITH ITEMS
+// Transaction เดียวทั้ง Round + Items
+// =====================================
+
+export async function createOrderWithItems(
   db,
-  roundId,
-  items
+  {
+    billId,
+    items,
+  }
 ) {
   try {
 
-    await db.withTransactionAsync(
+    // -----------------------------
+    // ตรวจสอบ Bill
+    // -----------------------------
+
+    if (!billId) {
+      return {
+        ok: false,
+        message: "ไม่พบ Bill",
+      };
+    }
+
+    // -----------------------------
+    // ตรวจสอบรายการ
+    // -----------------------------
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return {
+        ok: false,
+        message: "ไม่มีรายการอาหาร",
+      };
+    }
+
+    // =====================================
+    // TRANSACTION เดียว
+    // =====================================
+
+    const result = await db.withTransactionAsync(
       async () => {
+
+        // =====================================
+        // 1. CREATE ROUND
+        // =====================================
+
+        const roundResult = await db.runAsync(
+          `
+          INSERT INTO order_rounds (
+            bill_id,
+            round_number,
+            created_at
+          )
+          VALUES (
+            ?,
+            (
+              SELECT COALESCE(MAX(round_number), 0) + 1
+              FROM order_rounds
+              WHERE bill_id = ?
+            ),
+            datetime('now')
+          )
+          `,
+          [billId, billId]
+        );
+
+        const roundId =
+          roundResult.lastInsertRowId;
+
+
+        // =====================================
+        // 2. ADD ORDER ITEMS
+        // =====================================
 
         for (const item of items) {
 
-          const menu =
-            await db.getFirstAsync(
-              `
-              SELECT
-                price
-              FROM menu_prices
-              WHERE menu_id = ?
-                AND end_at IS NULL
-              `,
-              [item.menuId]
-            );
+          // -----------------------------
+          // ดึงราคาปัจจุบัน
+          // -----------------------------
+
+          const menu = await db.getFirstAsync(
+            `
+            SELECT
+              m.menu_id,
+              mp.price
+            FROM menus m
+            JOIN menu_prices mp
+              ON mp.menu_id = m.menu_id
+              AND mp.end_at IS NULL
+            WHERE m.menu_id = ?
+              AND m.is_available = 1
+            `,
+            [item.menuId]
+          );
+
+
+          // -----------------------------
+          // ตรวจสอบเมนู
+          // -----------------------------
 
           if (!menu) {
             throw new Error(
-              `ไม่พบราคาของเมนู ${item.menuId}`
+              `Menu ${item.menuId} is not available`
             );
           }
+
+
+          // -----------------------------
+          // ตรวจสอบจำนวน
+          // -----------------------------
+
+          if (
+            !Number.isInteger(item.quantity) ||
+            item.quantity <= 0
+          ) {
+            throw new Error(
+              `Invalid quantity for menu ${item.menuId}`
+            );
+          }
+
+
+          // -----------------------------
+          // INSERT ORDER ITEM
+          // -----------------------------
 
           await db.runAsync(
             `
@@ -185,96 +278,70 @@ export async function addOrderItems(
               round_id,
               menu_id,
               quantity,
-              note,
               price_at_order,
+              note,
               status,
               created_at
             )
-            VALUES (?, ?, ?, ?, ?, 'waiting', ?)
+            VALUES (
+              ?,
+              ?,
+              ?,
+              ?,
+              ?,
+              'waiting',
+              datetime('now')
+            )
             `,
             [
               roundId,
               item.menuId,
               item.quantity,
-              item.note ?? null,
               menu.price,
-              new Date().toISOString(),
+              item.note ?? null,
             ]
           );
         }
+
+
+        // =====================================
+        // 3. RETURN
+        // =====================================
+
+        return {
+          roundId,
+          itemCount: items.length,
+        };
       }
     );
 
+
+    // =====================================
+    // TRANSACTION สำเร็จ
+    // =====================================
+
     return {
       ok: true,
-      message:
-        'เพิ่มรายการอาหารสำเร็จ',
+      data: result,
+      message: "บันทึก Order สำเร็จ",
     };
 
   } catch (error) {
+
+    // =====================================
+    // ERROR
+    // withTransactionAsync
+    // จะ ROLLBACK ทั้ง Transaction
+    // =====================================
+
     console.error(
-      'addOrderItems failed:',
+      "createOrderWithItems failed:",
       error
     );
 
     return {
       ok: false,
-      message:
-        error.message ||
-        'ไม่สามารถเพิ่มรายการอาหารได้',
-    };
-  }
-}
-
-
-// ดูรายการอาหารของ Bill
-export async function getOrderItemsByBill(
-  db,
-  billId
-) {
-  try {
-    const rows =
-      await db.getAllAsync(
-        `
-        SELECT
-          oi.order_item_id,
-          oi.round_id,
-          oround.round_number,
-          oi.menu_id,
-          m.menu_name,
-          oi.quantity,
-          oi.note,
-          oi.price_at_order,
-          oi.status,
-          oi.created_at
-        FROM order_items oi
-        INNER JOIN order_rounds oround
-          ON oround.round_id = oi.round_id
-        INNER JOIN menus m
-          ON m.menu_id = oi.menu_id
-        WHERE oround.bill_id = ?
-        ORDER BY
-          oround.round_number ASC,
-          oi.created_at ASC
-        `,
-        [billId]
-      );
-
-    return {
-      ok: true,
-      data: rows,
-    };
-
-  } catch (error) {
-    console.error(
-      'getOrderItemsByBill failed:',
-      error
-    );
-
-    return {
-      ok: false,
-      message:
-        'ไม่สามารถดึงรายการอาหารได้',
+      message: "ไม่สามารถบันทึก Order ได้",
     };
   }
 }

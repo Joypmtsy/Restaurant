@@ -2,20 +2,8 @@
 
 import React from "react";
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-
-import {
-  colors,
-  spacing,
-  radius,
-  fontSize,
-  fontWeight,
-} from "../../constants/theme";
+import { View, Text, StyleSheet, TouchableOpacity, } from "react-native";
+import { colors, spacing, radius, fontSize, fontWeight } from "../../styles/theme";
 
 
 // =====================================================
