@@ -2,22 +2,9 @@
 
 import React from "react";
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, } from "react-native";
 
-import {
-  colors,
-  spacing,
-  radius,
-  fontSize,
-  fontWeight,
-  dimensions,
-  shadow,
-} from "../constants/theme";
+import { colors, spacing, radius, fontSize, fontWeight, dimensions, shadow, } from "../constants/theme";
 
 /*
   ==========================================================
@@ -26,12 +13,7 @@ import {
   Header ด้านบนที่ใช้ร่วมกันหลายหน้า
 */
 
-export function ScreenHeader({
-  title,
-  subtitle,
-  rightText,
-  children,
-}) {
+export function ScreenHeader({ title, subtitle, rightText, children,}) {
   return (
     <View style={styles.header}>
       <View>
@@ -69,10 +51,7 @@ export function ScreenHeader({
   กล่อง Card สีขาวที่ใช้เป็นพื้นฐานของข้อมูล
 */
 
-export function SectionCard({
-  children,
-  style,
-}) {
+export function SectionCard({ children, style, }) {
   return (
     <View style={[styles.card, style]}>
       {children}
@@ -88,12 +67,7 @@ export function SectionCard({
   ปุ่มหลักสีน้ำเงินของระบบ
 */
 
-export function PrimaryButton({
-  title,
-  onPress,
-  disabled = false,
-  style,
-}) {
+export function PrimaryButton({ title, onPress, disabled = false, style, }) {
   return (
     <TouchableOpacity
       style={[
@@ -119,10 +93,7 @@ export function PrimaryButton({
   Badge สำหรับสถานะของ Order / Bill / Table
 */
 
-export function StatusBadge({
-  status,
-  label,
-}) {
+export function StatusBadge({ status, label, }) {
   const config = STATUS_CONFIG[status] || STATUS_CONFIG.default;
 
   return (
@@ -156,11 +127,7 @@ export function StatusBadge({
   แถวข้อมูลแบบ Label / Value
 */
 
-export function InfoRow({
-  label,
-  value,
-  style,
-}) {
+export function InfoRow({ label, value, style, }) {
   return (
     <View style={[styles.infoRow, style]}>
       <Text style={styles.infoLabel}>
