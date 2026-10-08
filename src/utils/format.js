@@ -1,15 +1,14 @@
-export function baht(satang = 0) {
+export function baht(amount = 0) {
   return (
-    (Number(satang) / 100).toLocaleString("th-TH", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+    Number(amount).toLocaleString("th-TH", {
+      maximumFractionDigits: 0,
     }) + " บาท"
   );
 }
 export function parsePrice(value) {
-  if (!/^\d+(\.\d{1,2})?$/.test(String(value).trim()))
-    throw new Error("กรอกราคาเป็นตัวเลข ทศนิยมไม่เกิน 2 ตำแหน่ง");
-  const amount = Math.round(Number(value) * 100);
+  if (!/^\d+$/.test(String(value).trim()))
+    throw new Error("กรอกราคาเป็นบาทจำนวนเต็ม ไม่ใส่ทศนิยม");
+  const amount = Number(value);
   if (!Number.isSafeInteger(amount) || amount <= 0)
     throw new Error("ราคาต้องมากกว่า 0");
   return amount;

@@ -1,5 +1,10 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { useFocusEffect } from "expo-router";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { Alert } from "react-native";
 
 export function useRestaurantQuery(load, key = "", poll = false) {
@@ -42,21 +47,26 @@ export function useRestaurantQuery(load, key = "", poll = false) {
         setLoading(false);
     }
   }, []);
-  useFocusEffect(
-    useCallback(() => {
-      activeKey.current = key;
-      mounted.current = true;
+  const invalidate = useCallback(() => {
+    generation.current++;
+  }, []);
+
+  useEffect(() => {
+    activeKey.current = key;
+    mounted.current = true;
+    const start = setTimeout(() => {
       setLoading(true);
       setData(null);
       void refresh();
-      const interval = poll ? setInterval(refresh, 5000) : undefined;
-      return () => {
-        mounted.current = false;
-        generation.current++;
-        clearInterval(interval);
-      };
-    }, [key, poll, refresh]),
-  );
+    }, 0);
+    const interval = poll ? setInterval(refresh, 5000) : undefined;
+    return () => {
+      mounted.current = false;
+      invalidate();
+      clearTimeout(start);
+      clearInterval(interval);
+    };
+  }, [key, poll, refresh, invalidate]);
   return { data, loading, error, refresh };
 }
 
