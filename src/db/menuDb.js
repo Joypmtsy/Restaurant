@@ -1,7 +1,3 @@
-// src/db/menuDb.js
-
-
-// ดึงหมวดหมู่ทั้งหมด
 export async function getCategories(db) {
   try {
     const rows = await db.getAllAsync(`
@@ -16,23 +12,16 @@ export async function getCategories(db) {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getCategories failed:',
-      error
-    );
+    console.error("getCategories failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึงหมวดหมู่ได้',
+      message: "ไม่สามารถดึงหมวดหมู่ได้",
     };
   }
 }
 
-
-// ดึงเมนูทั้งหมดพร้อมราคาปัจจุบัน
 export async function getMenus(db) {
   try {
     const rows = await db.getAllAsync(`
@@ -58,23 +47,16 @@ export async function getMenus(db) {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getMenus failed:',
-      error
-    );
+    console.error("getMenus failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึงข้อมูลเมนูได้',
+      message: "ไม่สามารถดึงข้อมูลเมนูได้",
     };
   }
 }
 
-
-// ดึงเฉพาะเมนูที่เปิดขาย
 export async function getAvailableMenus(db) {
   try {
     const rows = await db.getAllAsync(`
@@ -100,27 +82,17 @@ export async function getAvailableMenus(db) {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getAvailableMenus failed:',
-      error
-    );
+    console.error("getAvailableMenus failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึงเมนูที่เปิดขายได้',
+      message: "ไม่สามารถดึงเมนูที่เปิดขายได้",
     };
   }
 }
 
-
-// ดึงเมนูตามหมวดหมู่
-export async function getMenusByCategory(
-  db,
-  categoryId
-) {
+export async function getMenusByCategory(db, categoryId) {
   try {
     const rows = await db.getAllAsync(
       `
@@ -140,35 +112,24 @@ export async function getMenusByCategory(
       WHERE m.category_id = ?
       ORDER BY m.menu_id ASC
       `,
-      [categoryId]
+      [categoryId],
     );
 
     return {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getMenusByCategory failed:',
-      error
-    );
+    console.error("getMenusByCategory failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึงเมนูตามหมวดหมู่ได้',
+      message: "ไม่สามารถดึงเมนูตามหมวดหมู่ได้",
     };
   }
 }
 
-
-// เปิด/ปิดการขายเมนู
-export async function updateMenuAvailability(
-  db,
-  menuId,
-  isAvailable
-) {
+export async function updateMenuAvailability(db, menuId, isAvailable) {
   try {
     await db.runAsync(
       `
@@ -176,61 +137,38 @@ export async function updateMenuAvailability(
       SET is_available = ?
       WHERE menu_id = ?
       `,
-      [
-        isAvailable,
-        menuId,
-      ]
+      [isAvailable, menuId],
     );
 
     return {
       ok: true,
-      message:
-        'เปลี่ยนสถานะเมนูสำเร็จ',
+      message: "เปลี่ยนสถานะเมนูสำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      'updateMenuAvailability failed:',
-      error
-    );
+    console.error("updateMenuAvailability failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถเปลี่ยนสถานะเมนูได้',
+      message: "ไม่สามารถเปลี่ยนสถานะเมนูได้",
     };
   }
 }
 
-
-// เปลี่ยนราคาสินค้า
-export async function changeMenuPrice(
-  db,
-  menuId,
-  newPrice,
-  startAt
-) {
+export async function changeMenuPrice(db, menuId, newPrice, startAt) {
   try {
-    await db.withTransactionAsync(
-      async () => {
-
-        // ปิดราคาปัจจุบัน
-        await db.runAsync(
-          `
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `
           UPDATE menu_prices
           SET end_at = ?
           WHERE menu_id = ?
             AND end_at IS NULL
           `,
-          [
-            startAt,
-            menuId,
-          ]
-        );
+        [startAt, menuId],
+      );
 
-        // เพิ่มราคาปัจจุบันใหม่
-        await db.runAsync(
-          `
+      await db.runAsync(
+        `
           INSERT INTO menu_prices (
             menu_id,
             price,
@@ -239,31 +177,20 @@ export async function changeMenuPrice(
           )
           VALUES (?, ?, ?, NULL)
           `,
-          [
-            menuId,
-            newPrice,
-            startAt,
-          ]
-        );
-      }
-    );
+        [menuId, newPrice, startAt],
+      );
+    });
 
     return {
       ok: true,
-      message:
-        'เปลี่ยนราคาเมนูสำเร็จ',
+      message: "เปลี่ยนราคาเมนูสำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      'changeMenuPrice failed:',
-      error
-    );
+    console.error("changeMenuPrice failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถเปลี่ยนราคาเมนูได้',
+      message: "ไม่สามารถเปลี่ยนราคาเมนูได้",
     };
   }
 }

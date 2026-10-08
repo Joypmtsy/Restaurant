@@ -6,11 +6,8 @@ const categories = [
 ];
 
 export async function SCategories(db) {
-
   try {
-
     for (const category of categories) {
-
       await db.runAsync(
         `
         INSERT OR IGNORE INTO categories (
@@ -19,25 +16,18 @@ export async function SCategories(db) {
         )
         VALUES (?, ?)
         `,
-        [
-          category.id,
-          category.name
-        ]
+        [category.id, category.name],
       );
-
     }
 
     return {
       ok: true,
-      message: "Seed D2 Categories สำเร็จ"
+      message: "Seed D2 Categories สำเร็จ",
     };
-
-  } catch (error) {
-
+  } catch (_error) {
     return {
       ok: false,
-      message: "Seed D2 Categories ไม่สำเร็จ"
+      message: "Seed D2 Categories ไม่สำเร็จ",
     };
-
   }
 }

@@ -1,39 +1,37 @@
-// src/components/CommonCp.js
-
 import React from "react";
 
-import { View, Text, StyleSheet, TouchableOpacity, } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-import { colors, spacing, radius, fontSize, fontWeight, dimensions, shadow, } from "../../styles/theme";
+import {
+  colors,
+  spacing,
+  radius,
+  fontSize,
+  fontWeight,
+  dimensions,
+  shadow,
+} from "../../styles/theme";
 
-/*
-  ==========================================================
-  1. ScreenHeader
-  ==========================================================
-  Header ด้านบนที่ใช้ร่วมกันหลายหน้า
-*/
-
-export function ScreenHeader({ title, subtitle, rightText, children,}) {
+export function ScreenHeader({
+  title,
+  subtitle = undefined,
+  rightText = undefined,
+  children = undefined,
+}) {
   return (
     <View style={styles.header}>
       <View>
-        <Text style={styles.headerTitle}>
-          {title}
-        </Text>
+        <Text style={styles.headerTitle}>{title}</Text>
 
         {subtitle ? (
-          <Text style={styles.headerSubtitle}>
-            {subtitle}
-          </Text>
+          <Text style={styles.headerSubtitle}>{subtitle}</Text>
         ) : null}
       </View>
 
       <View style={styles.headerRight}>
         {rightText ? (
           <View style={styles.headerBadge}>
-            <Text style={styles.headerBadgeText}>
-              {rightText}
-            </Text>
+            <Text style={styles.headerBadgeText}>{rightText}</Text>
           </View>
         ) : null}
 
@@ -43,31 +41,16 @@ export function ScreenHeader({ title, subtitle, rightText, children,}) {
   );
 }
 
-
-/*
-  ==========================================================
-  2. SectionCard
-  ==========================================================
-  กล่อง Card สีขาวที่ใช้เป็นพื้นฐานของข้อมูล
-*/
-
-export function SectionCard({ children, style, }) {
-  return (
-    <View style={[styles.card, style]}>
-      {children}
-    </View>
-  );
+export function SectionCard({ children = undefined, style = undefined }) {
+  return <View style={[styles.card, style]}>{children}</View>;
 }
 
-
-/*
-  ==========================================================
-  3. PrimaryButton
-  ==========================================================
-  ปุ่มหลักสีน้ำเงินของระบบ
-*/
-
-export function PrimaryButton({ title, onPress, disabled = false, style, }) {
+export function PrimaryButton({
+  title,
+  onPress = undefined,
+  disabled = false,
+  style = undefined,
+}) {
   return (
     <TouchableOpacity
       style={[
@@ -78,22 +61,12 @@ export function PrimaryButton({ title, onPress, disabled = false, style, }) {
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={styles.primaryButtonText}>
-        {title}
-      </Text>
+      <Text style={styles.primaryButtonText}>{title}</Text>
     </TouchableOpacity>
   );
 }
 
-
-/*
-  ==========================================================
-  4. StatusBadge
-  ==========================================================
-  Badge สำหรับสถานะของ Order / Bill / Table
-*/
-
-export function StatusBadge({ status, label, }) {
+export function StatusBadge({ status, label = undefined }) {
   const config = STATUS_CONFIG[status] || STATUS_CONFIG.default;
 
   return (
@@ -119,34 +92,15 @@ export function StatusBadge({ status, label, }) {
   );
 }
 
-
-/*
-  ==========================================================
-  5. InfoRow
-  ==========================================================
-  แถวข้อมูลแบบ Label / Value
-*/
-
-export function InfoRow({ label, value, style, }) {
+export function InfoRow({ label = undefined, value, style = undefined }) {
   return (
     <View style={[styles.infoRow, style]}>
-      <Text style={styles.infoLabel}>
-        {label}
-      </Text>
+      <Text style={styles.infoLabel}>{label}</Text>
 
-      <Text style={styles.infoValue}>
-        {value}
-      </Text>
+      <Text style={styles.infoValue}>{value}</Text>
     </View>
   );
 }
-
-
-/*
-  ==========================================================
-  Status Configuration
-  ==========================================================
-*/
 
 const STATUS_CONFIG = {
   waiting: {
@@ -198,20 +152,12 @@ const STATUS_CONFIG = {
   },
 };
 
-
-/*
-  ==========================================================
-  Styles
-  ==========================================================
-*/
-
 const styles = StyleSheet.create({
-  // =========================
-  // Header
-  // =========================
-
   header: {
-    height: dimensions.headerHeight,
+    minHeight: dimensions.headerHeight,
+    paddingVertical: spacing.md,
+    flexWrap: "wrap",
+    gap: spacing.sm,
 
     backgroundColor: colors.primaryDark,
 
@@ -266,11 +212,6 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
   },
 
-
-  // =========================
-  // Card
-  // =========================
-
   card: {
     backgroundColor: colors.surface,
 
@@ -280,11 +221,6 @@ const styles = StyleSheet.create({
 
     ...shadow.card,
   },
-
-
-  // =========================
-  // Primary Button
-  // =========================
 
   primaryButton: {
     backgroundColor: colors.primary,
@@ -314,11 +250,6 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.bold,
   },
 
-
-  // =========================
-  // Status Badge
-  // =========================
-
   statusBadge: {
     borderRadius: radius.md,
 
@@ -334,11 +265,6 @@ const styles = StyleSheet.create({
 
     fontWeight: fontWeight.bold,
   },
-
-
-  // =========================
-  // Info Row
-  // =========================
 
   infoRow: {
     minHeight: 44,
@@ -357,12 +283,17 @@ const styles = StyleSheet.create({
   },
 
   infoLabel: {
+    flex: 1,
+    paddingRight: spacing.md,
     color: colors.textMuted,
 
     fontSize: fontSize.md,
   },
 
   infoValue: {
+    flexShrink: 1,
+    maxWidth: "50%",
+    textAlign: "right",
     color: colors.textPrimary,
 
     fontSize: fontSize.md,

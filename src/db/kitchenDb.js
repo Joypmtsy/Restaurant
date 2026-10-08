@@ -1,11 +1,6 @@
-// src/db/kitchenDb.js
-
-
-// ดึงคิวครัวแบบ FIFO
 export async function getKitchenQueue(db) {
   try {
-    const rows =
-      await db.getAllAsync(`
+    const rows = await db.getAllAsync(`
         SELECT
           oi.order_item_id,
           oi.round_id,
@@ -32,37 +27,25 @@ export async function getKitchenQueue(db) {
           'waiting',
           'cooking'
         )
-        ORDER BY oi.created_at ASC
+        ORDER BY oi.created_at ASC, oi.order_item_id ASC
       `);
 
     return {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getKitchenQueue failed:',
-      error
-    );
+    console.error("getKitchenQueue failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึงคิวครัวได้',
+      message: "ไม่สามารถดึงคิวครัวได้",
     };
   }
 }
 
-
-// เปลี่ยนสถานะอาหาร
-export async function updateOrderItemStatus(
-  db,
-  orderItemId,
-  nextStatus
-) {
+export async function updateOrderItemStatus(db, orderItemId, nextStatus) {
   try {
-
     const item = await db.getFirstAsync(
       `
       SELECT
@@ -71,7 +54,7 @@ export async function updateOrderItemStatus(
       FROM order_items
       WHERE order_item_id = ?
       `,
-      [orderItemId]
+      [orderItemId],
     );
 
     if (!item) {
@@ -81,31 +64,18 @@ export async function updateOrderItemStatus(
       };
     }
 
-
-    // =====================================
-    // ตรวจสอบ State Transition
-    // =====================================
-
     const allowedTransitions = {
       waiting: "cooking",
       cooking: "served",
     };
 
-    if (
-      allowedTransitions[item.status] !==
-      nextStatus
-    ) {
+    if (allowedTransitions[item.status] !== nextStatus) {
       return {
         ok: false,
         message:
-          `ไม่สามารถเปลี่ยน ${item.status} → ${nextStatus} ได้`,
+          "ไม่สามารถเปลี่ยน " + item.status + " → " + nextStatus + " ได้",
       };
     }
-
-
-    // =====================================
-    // UPDATE STATUS
-    // =====================================
 
     await db.runAsync(
       `
@@ -113,44 +83,27 @@ export async function updateOrderItemStatus(
       SET status = ?
       WHERE order_item_id = ?
       `,
-      [
-        nextStatus,
-        orderItemId,
-      ]
+      [nextStatus, orderItemId],
     );
 
     return {
       ok: true,
-      message:
-        "เปลี่ยนสถานะอาหารสำเร็จ",
+      message: "เปลี่ยนสถานะอาหารสำเร็จ",
     };
-
   } catch (error) {
-
-    console.error(
-      "updateOrderItemStatus failed:",
-      error
-    );
+    console.error("updateOrderItemStatus failed:", error);
 
     return {
       ok: false,
-      message:
-        "ไม่สามารถเปลี่ยนสถานะอาหารได้",
+      message: "ไม่สามารถเปลี่ยนสถานะอาหารได้",
     };
   }
 }
 
-
-// ดูรายละเอียดออเดอร์ของรอบ
-export async function getKitchenRoundDetail(
-  db,
-  roundId
-) {
+export async function getKitchenRoundDetail(db, roundId) {
   try {
-
-    const rows =
-      await db.getAllAsync(
-        `
+    const rows = await db.getAllAsync(
+      `
         SELECT
           oi.order_item_id,
           oi.menu_id,
@@ -164,26 +117,21 @@ export async function getKitchenRoundDetail(
         INNER JOIN menus m
           ON m.menu_id = oi.menu_id
         WHERE oi.round_id = ?
-        ORDER BY oi.created_at ASC
+        ORDER BY oi.created_at ASC, oi.order_item_id ASC
         `,
-        [roundId]
-      );
+      [roundId],
+    );
 
     return {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getKitchenRoundDetail failed:',
-      error
-    );
+    console.error("getKitchenRoundDetail failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึงรายละเอียดออเดอร์ได้',
+      message: "ไม่สามารถดึงรายละเอียดออเดอร์ได้",
     };
   }
 }

@@ -9,12 +9,6 @@ import { SOrderItems } from "./SOrderItems";
 import { SPayments } from "./SPayments";
 import { STableTransfers } from "./STableTransfers";
 
-
-// =====================================
-// MASTER DATA
-// D1 - D4
-// =====================================
-
 export async function seedData(db) {
   try {
     await db.withTransactionAsync(async () => {
@@ -28,7 +22,6 @@ export async function seedData(db) {
       ok: true,
       message: "Seed Master Data D1-D4 สำเร็จ",
     };
-
   } catch (error) {
     console.error("seedData failed:", error);
 
@@ -38,12 +31,6 @@ export async function seedData(db) {
     };
   }
 }
-
-
-// =====================================
-// DEMO TRANSACTION DATA
-// D5 - D9
-// =====================================
 
 export async function seedDemoTransactions(db) {
   try {
@@ -59,17 +46,12 @@ export async function seedDemoTransactions(db) {
       ok: true,
       message: "Seed Demo Transaction D5-D9 สำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      "seedDemoTransactions failed:",
-      error
-    );
+    console.error("seedDemoTransactions failed:", error);
 
     return {
       ok: false,
-      message:
-        "Seed Demo Transaction D5-D9 ไม่สำเร็จ",
+      message: "Seed Demo Transaction D5-D9 ไม่สำเร็จ",
     };
   }
 }

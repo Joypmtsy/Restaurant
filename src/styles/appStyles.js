@@ -1,14 +1,15 @@
-// src/styles/appStyles.js
-
 import { StyleSheet } from "react-native";
-import { colors, spacing, radius, fontSize, fontWeight, dimensions, shadow, } from "./theme";
+import {
+  colors,
+  spacing,
+  radius,
+  fontSize,
+  fontWeight,
+  dimensions,
+  shadow,
+} from "./theme";
 
 export const appStyles = StyleSheet.create({
-
-  // =====================================================
-  // SCREEN
-  // =====================================================
-
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -23,11 +24,6 @@ export const appStyles = StyleSheet.create({
     padding: dimensions.screenPadding,
     paddingBottom: spacing.xxxl,
   },
-
-
-  // =====================================================
-  // HEADER
-  // =====================================================
 
   header: {
     backgroundColor: colors.primaryDark,
@@ -78,11 +74,6 @@ export const appStyles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
   },
 
-
-  // =====================================================
-  // TITLE
-  // =====================================================
-
   title: {
     color: colors.textPrimary,
     fontSize: fontSize.largeTitle,
@@ -100,11 +91,6 @@ export const appStyles = StyleSheet.create({
     fontSize: fontSize.xl,
     fontWeight: fontWeight.bold,
   },
-
-
-  // =====================================================
-  // CARD
-  // =====================================================
 
   card: {
     backgroundColor: colors.surface,
@@ -126,11 +112,6 @@ export const appStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-
-
-  // =====================================================
-  // ROW / LAYOUT
-  // =====================================================
 
   row: {
     flexDirection: "row",
@@ -161,11 +142,6 @@ export const appStyles = StyleSheet.create({
     alignItems: "center",
   },
 
-
-  // =====================================================
-  // INFO ROW
-  // =====================================================
-
   infoRow: {
     minHeight: 44,
 
@@ -189,11 +165,6 @@ export const appStyles = StyleSheet.create({
     fontSize: fontSize.md,
     fontWeight: fontWeight.semibold,
   },
-
-
-  // =====================================================
-  // BUTTON
-  // =====================================================
 
   primaryButton: {
     minHeight: dimensions.buttonHeight,
@@ -242,11 +213,6 @@ export const appStyles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
   },
 
-
-  // =====================================================
-  // STATUS
-  // =====================================================
-
   statusBadge: {
     alignSelf: "flex-start",
 
@@ -261,20 +227,10 @@ export const appStyles = StyleSheet.create({
     fontWeight: fontWeight.bold,
   },
 
-
-  // =====================================================
-  // DIVIDER
-  // =====================================================
-
   divider: {
     height: 1,
     backgroundColor: colors.border,
   },
-
-
-  // =====================================================
-  // SEARCH / INPUT
-  // =====================================================
 
   input: {
     backgroundColor: colors.surface,
@@ -292,11 +248,6 @@ export const appStyles = StyleSheet.create({
 
     fontSize: fontSize.md,
   },
-
-
-  // =====================================================
-  // EMPTY STATE
-  // =====================================================
 
   emptyContainer: {
     flex: 1,
@@ -319,11 +270,6 @@ export const appStyles = StyleSheet.create({
     marginTop: spacing.sm,
     textAlign: "center",
   },
-
-
-  // =====================================================
-  // SMALL SPACING HELPERS
-  // =====================================================
 
   marginTopSm: {
     marginTop: spacing.sm,

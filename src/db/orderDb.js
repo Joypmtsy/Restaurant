@@ -1,10 +1,3 @@
-// src/db/orderDb.js
-
-
-// =====================================
-// CREATE ORDER ROUND
-// =====================================
-
 export async function createOrderRound(db, billId) {
   try {
     const result = await db.runAsync(
@@ -24,7 +17,7 @@ export async function createOrderRound(db, billId) {
         datetime('now')
       )
       `,
-      [billId, billId]
+      [billId, billId],
     );
 
     return {
@@ -32,7 +25,6 @@ export async function createOrderRound(db, billId) {
       roundId: result.lastInsertRowId,
       message: "สร้างรอบ Order สำเร็จ",
     };
-
   } catch (error) {
     console.error("createOrderRound failed:", error);
 
@@ -43,20 +35,9 @@ export async function createOrderRound(db, billId) {
   }
 }
 
-
-// =====================================
-// ADD ORDER ITEMS
-// =====================================
-
 export async function addOrderItems(db, roundId, items) {
   try {
-
     for (const item of items) {
-
-      // -----------------------------
-      // ดึงราคาปัจจุบันของเมนู
-      // -----------------------------
-
       const menu = await db.getFirstAsync(
         `
         SELECT
@@ -69,35 +50,16 @@ export async function addOrderItems(db, roundId, items) {
         WHERE m.menu_id = ?
           AND m.is_available = 1
         `,
-        [item.menuId]
+        [item.menuId],
       );
 
-      // -----------------------------
-      // ไม่พบเมนู / เมนูปิดขาย
-      // -----------------------------
-
       if (!menu) {
-        throw new Error(
-          `Menu ${item.menuId} is not available`
-        );
+        throw new Error("Menu " + item.menuId + " is not available");
       }
 
-      // -----------------------------
-      // ตรวจสอบจำนวน
-      // -----------------------------
-
-      if (
-        !Number.isInteger(item.quantity) ||
-        item.quantity <= 0
-      ) {
-        throw new Error(
-          `Invalid quantity for menu ${item.menuId}`
-        );
+      if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+        throw new Error("Invalid quantity for menu " + item.menuId);
       }
-
-      // -----------------------------
-      // INSERT ORDER ITEM
-      // -----------------------------
 
       await db.runAsync(
         `
@@ -120,13 +82,7 @@ export async function addOrderItems(db, roundId, items) {
           datetime('now')
         )
         `,
-        [
-          roundId,
-          item.menuId,
-          item.quantity,
-          menu.price,
-          item.note ?? null,
-        ]
+        [roundId, item.menuId, item.quantity, menu.price, item.note ?? null],
       );
     }
 
@@ -134,7 +90,6 @@ export async function addOrderItems(db, roundId, items) {
       ok: true,
       message: "เพิ่มรายการ Order สำเร็จ",
     };
-
   } catch (error) {
     console.error("addOrderItems failed:", error);
 
@@ -145,35 +100,14 @@ export async function addOrderItems(db, roundId, items) {
   }
 }
 
-
-// =====================================
-// CREATE ORDER WITH ITEMS
-// Transaction เดียวทั้ง Round + Items
-// =====================================
-
-export async function createOrderWithItems(
-  db,
-  {
-    billId,
-    items,
-  }
-) {
+export async function createOrderWithItems(db, { billId, items }) {
   try {
-
-    // -----------------------------
-    // ตรวจสอบ Bill
-    // -----------------------------
-
     if (!billId) {
       return {
         ok: false,
         message: "ไม่พบ Bill",
       };
     }
-
-    // -----------------------------
-    // ตรวจสอบรายการ
-    // -----------------------------
 
     if (!Array.isArray(items) || items.length === 0) {
       return {
@@ -182,19 +116,9 @@ export async function createOrderWithItems(
       };
     }
 
-    // =====================================
-    // TRANSACTION เดียว
-    // =====================================
-
-    const result = await db.withTransactionAsync(
-      async () => {
-
-        // =====================================
-        // 1. CREATE ROUND
-        // =====================================
-
-        const roundResult = await db.runAsync(
-          `
+    const result = await db.withTransactionAsync(async () => {
+      const roundResult = await db.runAsync(
+        `
           INSERT INTO order_rounds (
             bill_id,
             round_number,
@@ -210,25 +134,14 @@ export async function createOrderWithItems(
             datetime('now')
           )
           `,
-          [billId, billId]
-        );
+        [billId, billId],
+      );
 
-        const roundId =
-          roundResult.lastInsertRowId;
+      const roundId = roundResult.lastInsertRowId;
 
-
-        // =====================================
-        // 2. ADD ORDER ITEMS
-        // =====================================
-
-        for (const item of items) {
-
-          // -----------------------------
-          // ดึงราคาปัจจุบัน
-          // -----------------------------
-
-          const menu = await db.getFirstAsync(
-            `
+      for (const item of items) {
+        const menu = await db.getFirstAsync(
+          `
             SELECT
               m.menu_id,
               mp.price
@@ -239,41 +152,19 @@ export async function createOrderWithItems(
             WHERE m.menu_id = ?
               AND m.is_available = 1
             `,
-            [item.menuId]
-          );
+          [item.menuId],
+        );
 
+        if (!menu) {
+          throw new Error("Menu " + item.menuId + " is not available");
+        }
 
-          // -----------------------------
-          // ตรวจสอบเมนู
-          // -----------------------------
+        if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+          throw new Error("Invalid quantity for menu " + item.menuId);
+        }
 
-          if (!menu) {
-            throw new Error(
-              `Menu ${item.menuId} is not available`
-            );
-          }
-
-
-          // -----------------------------
-          // ตรวจสอบจำนวน
-          // -----------------------------
-
-          if (
-            !Number.isInteger(item.quantity) ||
-            item.quantity <= 0
-          ) {
-            throw new Error(
-              `Invalid quantity for menu ${item.menuId}`
-            );
-          }
-
-
-          // -----------------------------
-          // INSERT ORDER ITEM
-          // -----------------------------
-
-          await db.runAsync(
-            `
+        await db.runAsync(
+          `
             INSERT INTO order_items (
               round_id,
               menu_id,
@@ -293,51 +184,23 @@ export async function createOrderWithItems(
               datetime('now')
             )
             `,
-            [
-              roundId,
-              item.menuId,
-              item.quantity,
-              menu.price,
-              item.note ?? null,
-            ]
-          );
-        }
-
-
-        // =====================================
-        // 3. RETURN
-        // =====================================
-
-        return {
-          roundId,
-          itemCount: items.length,
-        };
+          [roundId, item.menuId, item.quantity, menu.price, item.note ?? null],
+        );
       }
-    );
 
-
-    // =====================================
-    // TRANSACTION สำเร็จ
-    // =====================================
+      return {
+        roundId,
+        itemCount: items.length,
+      };
+    });
 
     return {
       ok: true,
       data: result,
       message: "บันทึก Order สำเร็จ",
     };
-
   } catch (error) {
-
-    // =====================================
-    // ERROR
-    // withTransactionAsync
-    // จะ ROLLBACK ทั้ง Transaction
-    // =====================================
-
-    console.error(
-      "createOrderWithItems failed:",
-      error
-    );
+    console.error("createOrderWithItems failed:", error);
 
     return {
       ok: false,

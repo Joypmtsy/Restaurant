@@ -1,20 +1,18 @@
-// src/db/seed/seedPayments.js
-
 const payments = [
   {
     id: 4001,
     billId: 1002,
     amount: 34000,
-    paymentMethod: 'cash',
-    paidAt: '2026-09-27 12:30',
+    paymentMethod: "cash",
+    paidAt: "2026-09-27 12:30",
   },
 
   {
     id: 4002,
     billId: 1004,
     amount: 32000,
-    paymentMethod: 'qr',
-    paidAt: '2026-09-27 11:30',
+    paymentMethod: "qr",
+    paidAt: "2026-09-27 11:30",
   },
 ];
 
@@ -38,25 +36,20 @@ export async function SPayments(db) {
           payment.amount,
           payment.paymentMethod,
           payment.paidAt,
-        ]
+        ],
       );
     }
 
     return {
       ok: true,
-      message: 'Seed D8 Payments สำเร็จ',
+      message: "Seed D8 Payments สำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      'seedPayments failed:',
-      error
-    );
+    console.error("seedPayments failed:", error);
 
     return {
       ok: false,
-      message:
-        'Seed D8 Payments ไม่สำเร็จ',
+      message: "Seed D8 Payments ไม่สำเร็จ",
     };
   }
 }

@@ -1,27 +1,18 @@
-// src/components/customer/CustomerCp.js
-
 import React from "react";
 
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-import { colors, spacing, radius, fontSize, fontWeight, } from "../../styles/theme";
-
-
-// =====================================================
-// 1. CustomerTableCard
-// =====================================================
-// ใช้ใน CustomerTableScreen
-// แสดงโต๊ะ + สถานะโต๊ะ
-//
+  colors,
+  spacing,
+  radius,
+  fontSize,
+  fontWeight,
+} from "../../styles/theme";
 
 export function CustomerTableCard({
   tableNumber,
   status = "available",
-  onPress,
+  onPress = undefined,
 }) {
   const isAvailable = status === "available";
 
@@ -29,17 +20,12 @@ export function CustomerTableCard({
     <TouchableOpacity
       style={[
         styles.tableCard,
-        isAvailable
-          ? styles.tableAvailable
-          : styles.tableOccupied,
+        isAvailable ? styles.tableAvailable : styles.tableOccupied,
       ]}
       onPress={onPress}
     >
       <Text
-        style={[
-          styles.tableNumber,
-          !isAvailable && styles.tableNumberOccupied,
-        ]}
+        style={[styles.tableNumber, !isAvailable && styles.tableNumberOccupied]}
       >
         {tableNumber}
       </Text>
@@ -47,9 +33,7 @@ export function CustomerTableCard({
       <Text
         style={[
           styles.tableStatus,
-          isAvailable
-            ? styles.availableText
-            : styles.occupiedText,
+          isAvailable ? styles.availableText : styles.occupiedText,
         ]}
       >
         {isAvailable ? "ว่าง" : "ไม่ว่าง"}
@@ -58,27 +42,9 @@ export function CustomerTableCard({
   );
 }
 
-
-// =====================================================
-// 2. MenuCard
-// =====================================================
-// ใช้ใน CustomerMenuScreen
-// แสดงรูป/emoji + ชื่อเมนู + ราคา + ปุ่มเพิ่ม
-//
-
-export function MenuCard({
-  menu,
-  onAdd,
-}) {
+export function MenuCard({ menu, onAdd, disabled = false }) {
   return (
     <View style={styles.menuCard}>
-
-      <View style={styles.foodImageBox}>
-        <Text style={styles.foodEmoji}>
-          {menu.emoji}
-        </Text>
-      </View>
-
       <Text
         style={styles.menuName}
         numberOfLines={2}
@@ -87,92 +53,55 @@ export function MenuCard({
       </Text>
 
       <View style={styles.menuBottomRow}>
-        <Text style={styles.menuPrice}>
-          {menu.price} บาท
-        </Text>
+        <Text style={styles.menuPrice}>{menu.price.toFixed(2)} บาท</Text>
 
         <TouchableOpacity
           style={styles.addButton}
+          disabled={disabled}
           onPress={() => onAdd(menu)}
         >
-          <Text style={styles.addButtonText}>
-            +
-          </Text>
+          <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 }
 
-
-// =====================================================
-// 3. CartItem
-// =====================================================
-// ใช้ใน CustomerMenuScreen / Cart
-// แสดงรายการในตะกร้า + ปุ่มเพิ่ม/ลดจำนวน
-//
-
-export function CartItem({
-  item,
-  onIncrease,
-  onDecrease,
-}) {
+export function CartItem({ item, onIncrease, onDecrease, disabled = false }) {
   return (
     <View style={styles.cartItem}>
-
       <View style={styles.cartItemInfo}>
-        <Text style={styles.cartItemName}>
-          {item.emoji} {item.name}
-        </Text>
+        <Text style={styles.cartItemName}>{item.name}</Text>
 
         <View style={styles.quantityRow}>
-
           <TouchableOpacity
             style={styles.quantityButton}
+            disabled={disabled}
             onPress={() => onDecrease(item)}
           >
-            <Text style={styles.quantityButtonText}>
-              -
-            </Text>
+            <Text style={styles.quantityButtonText}>-</Text>
           </TouchableOpacity>
 
-          <Text style={styles.quantityValue}>
-            {item.qty}
-          </Text>
+          <Text style={styles.quantityValue}>{item.qty}</Text>
 
           <TouchableOpacity
             style={styles.quantityButton}
+            disabled={disabled}
             onPress={() => onIncrease(item)}
           >
-            <Text style={styles.quantityButtonText}>
-              +
-            </Text>
+            <Text style={styles.quantityButtonText}>+</Text>
           </TouchableOpacity>
-
         </View>
       </View>
 
       <Text style={styles.cartItemPrice}>
-        {item.price * item.qty} บาท
+        {(item.price * item.qty).toFixed(2)} บาท
       </Text>
-
     </View>
   );
 }
 
-
-// =====================================================
-// 4. OrderStatusCard
-// =====================================================
-// ใช้ใน CustomerOrderStatusScreen
-// แสดงอาหาร + Round + จำนวน + สถานะ
-//
-
-export function OrderStatusCard({
-  order,
-  onPress,
-}) {
+export function OrderStatusCard({ order, onPress = undefined }) {
   const status = getOrderStatus(order.status);
 
   return (
@@ -181,15 +110,10 @@ export function OrderStatusCard({
       onPress={onPress}
     >
       <View style={styles.orderTopRow}>
-
         <View style={styles.orderMain}>
-          <Text style={styles.roundText}>
-            Round {order.round}
-          </Text>
+          <Text style={styles.roundText}>Round {order.round}</Text>
 
-          <Text style={styles.orderMenuName}>
-            {order.menu}
-          </Text>
+          <Text style={styles.orderMenuName}>{order.menu}</Text>
         </View>
 
         <View
@@ -211,79 +135,48 @@ export function OrderStatusCard({
             {status.label}
           </Text>
         </View>
-
       </View>
 
       <View style={styles.orderBottomRow}>
-
-        <Text style={styles.orderQuantity}>
-          จำนวน {order.quantity}
-        </Text>
+        <Text style={styles.orderQuantity}>จำนวน {order.quantity}</Text>
 
         <Text style={styles.orderPrice}>
           {order.price * order.quantity} บาท
         </Text>
-
       </View>
 
       {order.note ? (
-        <Text style={styles.orderNote}>
-          หมายเหตุ: {order.note}
-        </Text>
+        <Text style={styles.orderNote}>หมายเหตุ: {order.note}</Text>
       ) : null}
-
     </TouchableOpacity>
   );
 }
 
-
-// =====================================================
-// 5. BillItem
-// =====================================================
-// ใช้ใน CustomerBillScreen
-// แสดงรายการอาหารใน Bill
-//
-
-export function BillItem({
-  item,
-}) {
+export function BillItem({ item }) {
   return (
     <View style={styles.billItem}>
-
       <View style={styles.billItemMain}>
+        <Text style={styles.billItemName}>{item.name}</Text>
 
-        <Text style={styles.billItemName}>
-          {item.name}
-        </Text>
-
+        <Text style={styles.billItemQuantity}>x {item.quantity}</Text>
         <Text style={styles.billItemQuantity}>
-          x {item.quantity}
+          ราคา/หน่วย {item.priceAtOrder.toFixed(2)} บาท
         </Text>
 
         {item.note ? (
-          <Text style={styles.billItemNote}>
-            หมายเหตุ: {item.note}
-          </Text>
+          <Text style={styles.billItemNote}>หมายเหตุ: {item.note}</Text>
         ) : null}
-
       </View>
 
       <Text style={styles.billItemPrice}>
-        {item.quantity * item.priceAtOrder} บาท
+        {(item.quantity * item.priceAtOrder).toFixed(2)} บาท
       </Text>
-
     </View>
   );
 }
 
-
-// =====================================================
-// Helper
-// =====================================================
-
 function getOrderStatus(status) {
   switch (status) {
-
     case "waiting":
       return {
         label: "รอรับออเดอร์",
@@ -314,19 +207,9 @@ function getOrderStatus(status) {
   }
 }
 
-
-// =====================================================
-// Styles
-// =====================================================
-
 const styles = StyleSheet.create({
-
-  // ===================================================
-  // Customer Table
-  // ===================================================
-
   tableCard: {
-    width: 150,
+    width: "100%",
     height: 120,
 
     borderRadius: radius.card,
@@ -377,13 +260,8 @@ const styles = StyleSheet.create({
     color: colors.danger,
   },
 
-
-  // ===================================================
-  // Menu Card
-  // ===================================================
-
   menuCard: {
-    width: "31.5%",
+    width: "100%",
 
     backgroundColor: colors.surface,
 
@@ -394,23 +272,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
 
     borderColor: colors.border,
-  },
-
-  foodImageBox: {
-    height: 80,
-
-    backgroundColor: colors.background,
-
-    borderRadius: radius.md,
-
-    justifyContent: "center",
-    alignItems: "center",
-
-    marginBottom: spacing.sm,
-  },
-
-  foodEmoji: {
-    fontSize: 36,
   },
 
   menuName: {
@@ -440,10 +301,10 @@ const styles = StyleSheet.create({
   },
 
   addButton: {
-    width: 30,
-    height: 30,
+    width: 44,
+    height: 44,
 
-    borderRadius: 15,
+    borderRadius: 22,
 
     backgroundColor: colors.primary,
 
@@ -458,11 +319,6 @@ const styles = StyleSheet.create({
 
     fontWeight: fontWeight.bold,
   },
-
-
-  // ===================================================
-  // Cart
-  // ===================================================
 
   cartItem: {
     minHeight: 70,
@@ -503,8 +359,8 @@ const styles = StyleSheet.create({
   },
 
   quantityButton: {
-    width: 24,
-    height: 24,
+    width: 44,
+    height: 44,
 
     borderRadius: radius.sm,
 
@@ -541,11 +397,6 @@ const styles = StyleSheet.create({
 
     color: colors.textPrimary,
   },
-
-
-  // ===================================================
-  // Order Status
-  // ===================================================
 
   orderCard: {
     backgroundColor: colors.surface,
@@ -640,11 +491,6 @@ const styles = StyleSheet.create({
 
     color: colors.textMuted,
   },
-
-
-  // ===================================================
-  // Bill Item
-  // ===================================================
 
   billItem: {
     minHeight: 64,

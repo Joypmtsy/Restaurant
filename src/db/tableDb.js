@@ -1,6 +1,3 @@
-// src/db/tableDb.js
-
-// ดึงข้อมูลโต๊ะทั้งหมด
 export async function getTables(db) {
   try {
     const rows = await db.getAllAsync(`
@@ -20,22 +17,16 @@ export async function getTables(db) {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getTables failed:',
-      error
-    );
+    console.error("getTables failed:", error);
 
     return {
       ok: false,
-      message: 'ไม่สามารถดึงข้อมูลโต๊ะได้',
+      message: "ไม่สามารถดึงข้อมูลโต๊ะได้",
     };
   }
 }
 
-
-// ดึงโต๊ะจาก table_id
 export async function getTableById(db, tableId) {
   try {
     const row = await db.getFirstAsync(
@@ -46,33 +37,24 @@ export async function getTableById(db, tableId) {
       FROM tables
       WHERE table_id = ?
       `,
-      [tableId]
+      [tableId],
     );
 
     return {
       ok: true,
       data: row,
     };
-
   } catch (error) {
-    console.error(
-      'getTableById failed:',
-      error
-    );
+    console.error("getTableById failed:", error);
 
     return {
       ok: false,
-      message: 'ไม่สามารถดึงข้อมูลโต๊ะได้',
+      message: "ไม่สามารถดึงข้อมูลโต๊ะได้",
     };
   }
 }
 
-
-// ดึง Bill ที่เปิดอยู่ของโต๊ะ
-export async function getOpenBillByTable(
-  db,
-  tableId
-) {
+export async function getOpenBillByTable(db, tableId) {
   try {
     const row = await db.getFirstAsync(
       `
@@ -86,52 +68,35 @@ export async function getOpenBillByTable(
       WHERE table_id = ?
         AND status = 'open'
       `,
-      [tableId]
+      [tableId],
     );
 
     return {
       ok: true,
       data: row,
     };
-
   } catch (error) {
-    console.error(
-      'getOpenBillByTable failed:',
-      error
-    );
+    console.error("getOpenBillByTable failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถตรวจสอบบิลโต๊ะได้',
+      message: "ไม่สามารถตรวจสอบบิลโต๊ะได้",
     };
   }
 }
 
-
-// ย้าย Bill จากโต๊ะหนึ่งไปอีกโต๊ะหนึ่ง
-export async function transferBillToTable(
-  db,
-  billId,
-  fromTableId,
-  toTableId
-) {
+export async function transferBillToTable(db, billId, fromTableId, toTableId) {
   try {
-
     if (fromTableId === toTableId) {
       return {
         ok: false,
-        message:
-          'โต๊ะต้นทางและโต๊ะปลายทางต้องไม่เหมือนกัน',
+        message: "โต๊ะต้นทางและโต๊ะปลายทางต้องไม่เหมือนกัน",
       };
     }
 
-    await db.withTransactionAsync(
-      async () => {
-
-        // ตรวจสอบ Bill ต้นทาง
-        const bill = await db.getFirstAsync(
-          `
+    await db.withTransactionAsync(async () => {
+      const bill = await db.getFirstAsync(
+        `
           SELECT
             bill_id,
             table_id,
@@ -140,56 +105,42 @@ export async function transferBillToTable(
           WHERE bill_id = ?
             AND status = 'open'
           `,
-          [billId]
-        );
+        [billId],
+      );
 
-        if (!bill) {
-          throw new Error(
-            'ไม่พบบิลที่เปิดอยู่'
-          );
-        }
+      if (!bill) {
+        throw new Error("ไม่พบบิลที่เปิดอยู่");
+      }
 
-        // ตรวจสอบว่า Bill อยู่โต๊ะต้นทางจริง
-        if (bill.table_id !== fromTableId) {
-          throw new Error(
-            'โต๊ะต้นทางของบิลไม่ตรงกัน'
-          );
-        }
+      if (bill.table_id !== fromTableId) {
+        throw new Error("โต๊ะต้นทางของบิลไม่ตรงกัน");
+      }
 
-        // ตรวจสอบโต๊ะปลายทาง
-        const destinationBill =
-          await db.getFirstAsync(
-            `
+      const destinationBill = await db.getFirstAsync(
+        `
             SELECT bill_id
             FROM bills
             WHERE table_id = ?
               AND status = 'open'
             `,
-            [toTableId]
-          );
+        [toTableId],
+      );
 
-        if (destinationBill) {
-          throw new Error(
-            'โต๊ะปลายทางมีบิลเปิดอยู่แล้ว'
-          );
-        }
+      if (destinationBill) {
+        throw new Error("โต๊ะปลายทางมีบิลเปิดอยู่แล้ว");
+      }
 
-        // เปลี่ยนโต๊ะของ Bill
-        await db.runAsync(
-          `
+      await db.runAsync(
+        `
           UPDATE bills
           SET table_id = ?
           WHERE bill_id = ?
           `,
-          [
-            toTableId,
-            billId,
-          ]
-        );
+        [toTableId, billId],
+      );
 
-        // บันทึกประวัติการย้าย
-        await db.runAsync(
-          `
+      await db.runAsync(
+        `
           INSERT INTO table_transfers (
             bill_id,
             from_table_id,
@@ -198,33 +149,20 @@ export async function transferBillToTable(
           )
           VALUES (?, ?, ?, ?)
           `,
-          [
-            billId,
-            fromTableId,
-            toTableId,
-            new Date().toISOString(),
-          ]
-        );
-      }
-    );
+        [billId, fromTableId, toTableId, new Date().toISOString()],
+      );
+    });
 
     return {
       ok: true,
-      message:
-        'ย้ายโต๊ะสำเร็จ',
+      message: "ย้ายโต๊ะสำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      'transferBillToTable failed:',
-      error
-    );
+    console.error("transferBillToTable failed:", error);
 
     return {
       ok: false,
-      message:
-        error.message ||
-        'ไม่สามารถย้ายโต๊ะได้',
+      message: error.message || "ไม่สามารถย้ายโต๊ะได้",
     };
   }
 }

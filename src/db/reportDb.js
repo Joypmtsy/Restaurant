@@ -1,17 +1,7 @@
-// src/db/reportDb.js
-
-
-// สรุปยอดขายรวม
-export async function getSalesSummary(
-  db,
-  startAt,
-  endAt
-) {
+export async function getSalesSummary(db, startAt, endAt) {
   try {
-
-    const row =
-      await db.getFirstAsync(
-        `
+    const row = await db.getFirstAsync(
+      `
         SELECT
           COUNT(DISTINCT b.bill_id)
             AS bill_count,
@@ -36,44 +26,27 @@ export async function getSalesSummary(
           AND b.closed_at >= ?
           AND b.closed_at < ?
         `,
-        [
-          startAt,
-          endAt,
-        ]
-      );
+      [startAt, endAt],
+    );
 
     return {
       ok: true,
       data: row,
     };
-
   } catch (error) {
-
-    console.error(
-      "getSalesSummary failed:",
-      error
-    );
+    console.error("getSalesSummary failed:", error);
 
     return {
       ok: false,
-      message:
-        "ไม่สามารถดึงสรุปยอดขายได้",
+      message: "ไม่สามารถดึงสรุปยอดขายได้",
     };
   }
 }
 
-
-// ยอดขายแยกตามหมวดหมู่
-export async function getCategorySales(
-  db,
-  startAt,
-  endAt
-) {
+export async function getCategorySales(db, startAt, endAt) {
   try {
-
-    const rows =
-      await db.getAllAsync(
-        `
+    const rows = await db.getAllAsync(
+      `
         SELECT
           c.category_id,
           c.category_name,
@@ -116,43 +89,27 @@ export async function getCategorySales(
         ORDER BY
           sales_total DESC
         `,
-        [
-          startAt,
-          endAt,
-        ]
-      );
+      [startAt, endAt],
+    );
 
     return {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getCategorySales failed:',
-      error
-    );
+    console.error("getCategorySales failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึงยอดขายตามหมวดหมู่ได้',
+      message: "ไม่สามารถดึงยอดขายตามหมวดหมู่ได้",
     };
   }
 }
 
-
-// Top 10 เมนูขายดี
-export async function getTop10Menus(
-  db,
-  startAt,
-  endAt
-) {
+export async function getTop10Menus(db, startAt, endAt) {
   try {
-
-    const rows =
-      await db.getAllAsync(
-        `
+    const rows = await db.getAllAsync(
+      `
         SELECT
           m.menu_id,
           m.menu_name,
@@ -189,43 +146,27 @@ export async function getTop10Menus(
 
         LIMIT 10
         `,
-        [
-          startAt,
-          endAt,
-        ]
-      );
+      [startAt, endAt],
+    );
 
     return {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getTop10Menus failed:',
-      error
-    );
+    console.error("getTop10Menus failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึง Top 10 เมนูได้',
+      message: "ไม่สามารถดึง Top 10 เมนูได้",
     };
   }
 }
 
-
-// ประวัติบิล
-export async function getBillHistory(
-  db,
-  startAt,
-  endAt
-) {
+export async function getBillHistory(db, startAt, endAt) {
   try {
-
-    const rows =
-      await db.getAllAsync(
-        `
+    const rows = await db.getAllAsync(
+      `
         SELECT
           b.bill_id,
           t.table_number,
@@ -264,27 +205,19 @@ export async function getBillHistory(
         ORDER BY
           b.closed_at DESC
         `,
-        [
-          startAt,
-          endAt,
-        ]
-      );
+      [startAt, endAt],
+    );
 
     return {
       ok: true,
       data: rows,
     };
-
   } catch (error) {
-    console.error(
-      'getBillHistory failed:',
-      error
-    );
+    console.error("getBillHistory failed:", error);
 
     return {
       ok: false,
-      message:
-        'ไม่สามารถดึงประวัติบิลได้',
+      message: "ไม่สามารถดึงประวัติบิลได้",
     };
   }
 }
