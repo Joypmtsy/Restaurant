@@ -1,5 +1,3 @@
-// src/db/seed/seedTables.js
-
 export async function STables(db) {
   try {
     for (let i = 1; i <= 15; i++) {
@@ -11,24 +9,20 @@ export async function STables(db) {
         )
         VALUES (?, ?)
         `,
-        [i, i]
+        [i, i],
       );
     }
 
     return {
       ok: true,
-      message: 'Seed D1 Tables สำเร็จ',
+      message: "Seed D1 Tables สำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      'seedTables failed:',
-      error
-    );
+    console.error("seedTables failed:", error);
 
     return {
       ok: false,
-      message: 'Seed D1 Tables ไม่สำเร็จ',
+      message: "Seed D1 Tables ไม่สำเร็จ",
     };
   }
 }

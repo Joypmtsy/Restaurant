@@ -1,14 +1,4 @@
--- =====================================
--- Restaurant Ordering System
--- Final Database Schema
--- =====================================
-
 PRAGMA foreign_keys = ON;
-
-
--- =====================================
--- D1 : TABLES
--- =====================================
 
 CREATE TABLE IF NOT EXISTS tables (
     table_id INTEGER PRIMARY KEY,
@@ -16,20 +6,10 @@ CREATE TABLE IF NOT EXISTS tables (
         CHECK (table_number BETWEEN 1 AND 15)
 );
 
-
--- =====================================
--- D2 : CATEGORIES
--- =====================================
-
 CREATE TABLE IF NOT EXISTS categories (
     category_id INTEGER PRIMARY KEY,
     category_name TEXT NOT NULL UNIQUE
 );
-
-
--- =====================================
--- D3 : MENUS
--- =====================================
 
 CREATE TABLE IF NOT EXISTS menus (
     menu_id INTEGER PRIMARY KEY,
@@ -43,11 +23,6 @@ CREATE TABLE IF NOT EXISTS menus (
         ON DELETE RESTRICT
         ON UPDATE RESTRICT
 );
-
-
--- =====================================
--- D4 : MENU_PRICES
--- =====================================
 
 CREATE TABLE IF NOT EXISTS menu_prices (
     price_id INTEGER PRIMARY KEY,
@@ -69,17 +44,10 @@ CREATE TABLE IF NOT EXISTS menu_prices (
         ON UPDATE RESTRICT
 );
 
-
--- ราคาปัจจุบันของแต่ละเมนูมีได้เพียง 1 รายการ
 CREATE UNIQUE INDEX IF NOT EXISTS
     ux_menu_prices_current
 ON menu_prices(menu_id)
 WHERE end_at IS NULL;
-
-
--- =====================================
--- D5 : BILLS
--- =====================================
 
 CREATE TABLE IF NOT EXISTS bills (
     bill_id INTEGER PRIMARY KEY,
@@ -104,17 +72,10 @@ CREATE TABLE IF NOT EXISTS bills (
         ON UPDATE RESTRICT
 );
 
-
--- 1 โต๊ะมี Bill ที่เปิดอยู่ได้เพียง 1 Bill
 CREATE UNIQUE INDEX IF NOT EXISTS
     ux_bills_one_open_per_table
 ON bills(table_id)
 WHERE status = 'open';
-
-
--- =====================================
--- D6 : ORDER_ROUNDS
--- =====================================
 
 CREATE TABLE IF NOT EXISTS order_rounds (
     round_id INTEGER PRIMARY KEY,
@@ -136,11 +97,6 @@ CREATE TABLE IF NOT EXISTS order_rounds (
         ON DELETE RESTRICT
         ON UPDATE RESTRICT
 );
-
-
--- =====================================
--- D7 : ORDER_ITEMS
--- =====================================
 
 CREATE TABLE IF NOT EXISTS order_items (
     order_item_id INTEGER PRIMARY KEY,
@@ -179,11 +135,6 @@ CREATE TABLE IF NOT EXISTS order_items (
         ON UPDATE RESTRICT
 );
 
-
--- =====================================
--- D8 : PAYMENTS
--- =====================================
-
 CREATE TABLE IF NOT EXISTS payments (
     payment_id INTEGER PRIMARY KEY,
 
@@ -202,11 +153,6 @@ CREATE TABLE IF NOT EXISTS payments (
         ON DELETE RESTRICT
         ON UPDATE RESTRICT
 );
-
-
--- =====================================
--- D9 : TABLE_TRANSFERS
--- =====================================
 
 CREATE TABLE IF NOT EXISTS table_transfers (
     transfer_id INTEGER PRIMARY KEY,
@@ -240,26 +186,23 @@ CREATE TABLE IF NOT EXISTS table_transfers (
         ON UPDATE RESTRICT
 );
 
-
--- =====================================
--- INDEXES
--- =====================================
-
 CREATE INDEX IF NOT EXISTS
     idx_order_items_status
 ON order_items(status);
-
 
 CREATE INDEX IF NOT EXISTS
     idx_order_items_created
 ON order_items(created_at);
 
-
 CREATE INDEX IF NOT EXISTS
     idx_order_rounds_created
 ON order_rounds(created_at);
 
-
 CREATE INDEX IF NOT EXISTS
     idx_bills_closed_at
 ON bills(closed_at);
+
+CREATE TABLE IF NOT EXISTS app_meta (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);

@@ -1,10 +1,4 @@
-// src/db/restaurantDb.js
-
-export const DATABASE_NAME = "restaurant.db";
-
-// =====================================
-// INIT DATABASE
-// =====================================
+export const DATABASE_NAME = "restaurant-order-01418342.db";
 
 export async function initDb(db) {
   try {
@@ -12,30 +6,16 @@ export async function initDb(db) {
       PRAGMA foreign_keys = ON;
       PRAGMA journal_mode = WAL;
 
-      -- =====================================
-      -- D1 : TABLES
-      -- =====================================
-
       CREATE TABLE IF NOT EXISTS tables (
         table_id INTEGER PRIMARY KEY,
         table_number INTEGER NOT NULL UNIQUE
           CHECK (table_number BETWEEN 1 AND 15)
       );
 
-
-      -- =====================================
-      -- D2 : CATEGORIES
-      -- =====================================
-
       CREATE TABLE IF NOT EXISTS categories (
         category_id INTEGER PRIMARY KEY,
         category_name TEXT NOT NULL UNIQUE
       );
-
-
-      -- =====================================
-      -- D3 : MENUS
-      -- =====================================
 
       CREATE TABLE IF NOT EXISTS menus (
         menu_id INTEGER PRIMARY KEY,
@@ -49,11 +29,6 @@ export async function initDb(db) {
           ON DELETE RESTRICT
           ON UPDATE RESTRICT
       );
-
-
-      -- =====================================
-      -- D4 : MENU_PRICES
-      -- =====================================
 
       CREATE TABLE IF NOT EXISTS menu_prices (
         price_id INTEGER PRIMARY KEY,
@@ -74,17 +49,10 @@ export async function initDb(db) {
           ON UPDATE RESTRICT
       );
 
-
-      -- ราคาปัจจุบันของแต่ละเมนูมีได้เพียง 1 รายการ
       CREATE UNIQUE INDEX IF NOT EXISTS
         ux_menu_prices_current
       ON menu_prices(menu_id)
       WHERE end_at IS NULL;
-
-
-      -- =====================================
-      -- D5 : BILLS
-      -- =====================================
 
       CREATE TABLE IF NOT EXISTS bills (
         bill_id INTEGER PRIMARY KEY,
@@ -108,17 +76,10 @@ export async function initDb(db) {
           ON UPDATE RESTRICT
       );
 
-
-      -- 1 โต๊ะมี Bill ที่เปิดอยู่ได้เพียง 1 Bill
       CREATE UNIQUE INDEX IF NOT EXISTS
         ux_bills_one_open_per_table
       ON bills(table_id)
       WHERE status = 'open';
-
-
-      -- =====================================
-      -- D6 : ORDER_ROUNDS
-      -- =====================================
 
       CREATE TABLE IF NOT EXISTS order_rounds (
         round_id INTEGER PRIMARY KEY,
@@ -140,11 +101,6 @@ export async function initDb(db) {
           ON DELETE RESTRICT
           ON UPDATE RESTRICT
       );
-
-
-      -- =====================================
-      -- D7 : ORDER_ITEMS
-      -- =====================================
 
       CREATE TABLE IF NOT EXISTS order_items (
         order_item_id INTEGER PRIMARY KEY,
@@ -184,11 +140,6 @@ export async function initDb(db) {
           ON UPDATE RESTRICT
       );
 
-
-      -- =====================================
-      -- D8 : PAYMENTS
-      -- =====================================
-
       CREATE TABLE IF NOT EXISTS payments (
         payment_id INTEGER PRIMARY KEY,
 
@@ -207,11 +158,6 @@ export async function initDb(db) {
           ON DELETE RESTRICT
           ON UPDATE RESTRICT
       );
-
-
-      -- =====================================
-      -- D9 : TABLE_TRANSFERS
-      -- =====================================
 
       CREATE TABLE IF NOT EXISTS table_transfers (
         transfer_id INTEGER PRIMARY KEY,
@@ -245,25 +191,17 @@ export async function initDb(db) {
           ON UPDATE RESTRICT
       );
 
-
-      -- =====================================
-      -- INDEXES
-      -- =====================================
-
       CREATE INDEX IF NOT EXISTS
         idx_order_items_status
       ON order_items(status);
-
 
       CREATE INDEX IF NOT EXISTS
         idx_order_items_created
       ON order_items(created_at);
 
-
       CREATE INDEX IF NOT EXISTS
         idx_order_rounds_created
       ON order_rounds(created_at);
-
 
       CREATE INDEX IF NOT EXISTS
         idx_bills_closed_at
@@ -275,7 +213,6 @@ export async function initDb(db) {
       ok: true,
       message: "สร้าง Database D1–D9 สำเร็จ",
     };
-
   } catch (error) {
     console.error("initDb failed:", error);
 
@@ -286,40 +223,25 @@ export async function initDb(db) {
   }
 }
 
-
-// =====================================
-// RESET TRANSACTIONS
-// =====================================
-
 export async function resetTransactions(db) {
   try {
     await db.withTransactionAsync(async () => {
-
-      // =====================================
-      // DELETE TRANSACTION DATA
-      // =====================================
-
-      // D9 : TABLE_TRANSFERS
       await db.runAsync(`
         DELETE FROM table_transfers;
       `);
 
-      // D8 : PAYMENTS
       await db.runAsync(`
         DELETE FROM payments;
       `);
 
-      // D7 : ORDER_ITEMS
       await db.runAsync(`
         DELETE FROM order_items;
       `);
 
-      // D6 : ORDER_ROUNDS
       await db.runAsync(`
         DELETE FROM order_rounds;
       `);
 
-      // D5 : BILLS
       await db.runAsync(`
         DELETE FROM bills;
       `);
@@ -329,12 +251,8 @@ export async function resetTransactions(db) {
       ok: true,
       message: "ล้างข้อมูล Transaction สำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      "resetTransactions failed:",
-      error
-    );
+    console.error("resetTransactions failed:", error);
 
     return {
       ok: false,

@@ -1,5 +1,3 @@
-// src/db/seed/seedMenuPrices.js
-
 const prices = [
   { id: 1, menuId: 1, price: 15000 },
   { id: 2, menuId: 2, price: 12000 },
@@ -30,7 +28,7 @@ const prices = [
 
 export async function SMenuPrices(db) {
   try {
-    const startAt = '2026-09-01 10:00';
+    const startAt = "2026-09-01 10:00";
 
     for (const item of prices) {
       await db.runAsync(
@@ -44,16 +42,10 @@ export async function SMenuPrices(db) {
         )
         VALUES (?, ?, ?, ?, NULL)
         `,
-        [
-          item.id,
-          item.menuId,
-          item.price,
-          startAt,
-        ]
+        [item.id, item.menuId, item.price, startAt],
       );
     }
 
-    // ราคาประวัติของเมนูต้มยำกุ้ง
     await db.runAsync(
       `
       INSERT OR IGNORE INTO menu_prices (
@@ -65,29 +57,19 @@ export async function SMenuPrices(db) {
       )
       VALUES (?, ?, ?, ?, ?)
       `,
-      [
-        26,
-        1,
-        14000,
-        '2026-08-01 10:00',
-        '2026-09-01 10:00',
-      ]
+      [26, 1, 14000, "2026-08-01 10:00", "2026-09-01 10:00"],
     );
 
     return {
       ok: true,
-      message: 'Seed D4 Menu Prices สำเร็จ',
+      message: "Seed D4 Menu Prices สำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      'seedMenuPrices failed:',
-      error
-    );
+    console.error("seedMenuPrices failed:", error);
 
     return {
       ok: false,
-      message: 'Seed D4 Menu Prices ไม่สำเร็จ',
+      message: "Seed D4 Menu Prices ไม่สำเร็จ",
     };
   }
 }

@@ -1,25 +1,19 @@
-
 export const colors = {
-  // ===== Main =====
   primary: "#1C7ED6",
   primaryDark: "#1E293B",
 
-  // ===== Background =====
   background: "#F1F5F9",
   surface: "#FFFFFF",
   surfaceLight: "#F8FAFC",
 
-  // ===== Text =====
   textPrimary: "#0F172A",
   textSecondary: "#475569",
   textMuted: "#64748B",
   textLight: "#CBD5E1",
   textWhite: "#FFFFFF",
 
-  // ===== Border =====
   border: "#E2E8F0",
 
-  // ===== Status =====
   success: "#16A34A",
   successBg: "#DCFCE7",
 
@@ -32,15 +26,11 @@ export const colors = {
   danger: "#EF4444",
   dangerBg: "#FEE2E2",
 
-  // ===== Table =====
   available: "#22C55E",
   occupied: "#EF4444",
 
-  // ===== Other =====
   disabled: "#94A3B8",
 };
-
-// ===== Spacing =====
 
 export const spacing = {
   xs: 4,
@@ -52,8 +42,6 @@ export const spacing = {
   xxxl: 32,
 };
 
-// ===== Border Radius =====
-
 export const radius = {
   sm: 6,
   md: 8,
@@ -63,8 +51,6 @@ export const radius = {
   card: 16,
   round: 999,
 };
-
-// ===== Font Size =====
 
 export const fontSize = {
   xs: 11,
@@ -77,16 +63,12 @@ export const fontSize = {
   largeTitle: 30,
 };
 
-// ===== Font Weight =====
-
-export const fontWeight = {
+export const fontWeight = Object.freeze({
   regular: "400",
   medium: "500",
   semibold: "600",
   bold: "700",
-};
-
-// ===== Common Dimensions =====
+});
 
 export const dimensions = {
   headerHeight: 80,
@@ -100,8 +82,6 @@ export const dimensions = {
   screenPadding: 24,
 };
 
-// ===== Shadow =====
-
 export const shadow = {
   card: {
     shadowColor: "#000",
@@ -110,8 +90,6 @@ export const shadow = {
     elevation: 2,
   },
 };
-
-// ===== Status Text =====
 
 export const statusText = {
   waiting: "รอรับออเดอร์",

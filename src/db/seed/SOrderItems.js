@@ -1,15 +1,13 @@
-// src/db/seed/seedOrderItems.js
-
 const orderItems = [
   {
     id: 3001,
     roundId: 2001,
     menuId: 1,
     quantity: 1,
-    note: 'เผ็ดน้อย',
+    note: "เผ็ดน้อย",
     priceAtOrder: 15000,
-    status: 'served',
-    createdAt: '2026-09-27 12:06',
+    status: "served",
+    createdAt: "2026-09-27 12:06",
   },
 
   {
@@ -17,10 +15,10 @@ const orderItems = [
     roundId: 2001,
     menuId: 6,
     quantity: 2,
-    note: 'ไม่ใส่พริก',
+    note: "ไม่ใส่พริก",
     priceAtOrder: 10000,
-    status: 'served',
-    createdAt: '2026-09-27 12:07',
+    status: "served",
+    createdAt: "2026-09-27 12:07",
   },
 
   {
@@ -30,8 +28,8 @@ const orderItems = [
     quantity: 2,
     note: null,
     priceAtOrder: 1500,
-    status: 'cooking',
-    createdAt: '2026-09-27 12:21',
+    status: "cooking",
+    createdAt: "2026-09-27 12:21",
   },
 
   {
@@ -39,10 +37,10 @@ const orderItems = [
     roundId: 2002,
     menuId: 14,
     quantity: 1,
-    note: 'กรอบๆ',
+    note: "กรอบๆ",
     priceAtOrder: 10000,
-    status: 'waiting',
-    createdAt: '2026-09-27 12:22',
+    status: "waiting",
+    createdAt: "2026-09-27 12:22",
   },
 
   {
@@ -52,8 +50,8 @@ const orderItems = [
     quantity: 1,
     note: null,
     priceAtOrder: 10000,
-    status: 'served',
-    createdAt: '2026-09-27 11:06',
+    status: "served",
+    createdAt: "2026-09-27 11:06",
   },
 
   {
@@ -61,10 +59,10 @@ const orderItems = [
     roundId: 2003,
     menuId: 21,
     quantity: 2,
-    note: 'หวานน้อย',
+    note: "หวานน้อย",
     priceAtOrder: 4500,
-    status: 'served',
-    createdAt: '2026-09-27 11:07',
+    status: "served",
+    createdAt: "2026-09-27 11:07",
   },
 
   {
@@ -72,10 +70,10 @@ const orderItems = [
     roundId: 2003,
     menuId: 16,
     quantity: 1,
-    note: 'ไม่ใส่ปลาร้า',
+    note: "ไม่ใส่ปลาร้า",
     priceAtOrder: 8000,
-    status: 'served',
-    createdAt: '2026-09-27 11:08',
+    status: "served",
+    createdAt: "2026-09-27 11:08",
   },
 
   {
@@ -85,8 +83,8 @@ const orderItems = [
     quantity: 1,
     note: null,
     priceAtOrder: 12000,
-    status: 'served',
-    createdAt: '2026-09-27 13:06',
+    status: "served",
+    createdAt: "2026-09-27 13:06",
   },
 
   {
@@ -96,8 +94,8 @@ const orderItems = [
     quantity: 1,
     note: null,
     priceAtOrder: 12000,
-    status: 'served',
-    createdAt: '2026-09-27 13:07',
+    status: "served",
+    createdAt: "2026-09-27 13:07",
   },
 
   {
@@ -107,8 +105,8 @@ const orderItems = [
     quantity: 1,
     note: null,
     priceAtOrder: 5000,
-    status: 'cooking',
-    createdAt: '2026-09-27 13:26',
+    status: "cooking",
+    createdAt: "2026-09-27 13:26",
   },
 
   {
@@ -118,8 +116,8 @@ const orderItems = [
     quantity: 2,
     note: null,
     priceAtOrder: 4000,
-    status: 'waiting',
-    createdAt: '2026-09-27 13:27',
+    status: "waiting",
+    createdAt: "2026-09-27 13:27",
   },
 
   {
@@ -129,8 +127,8 @@ const orderItems = [
     quantity: 2,
     note: null,
     priceAtOrder: 12000,
-    status: 'served',
-    createdAt: '2026-09-27 10:06',
+    status: "served",
+    createdAt: "2026-09-27 10:06",
   },
 ];
 
@@ -160,25 +158,20 @@ export async function SOrderItems(db) {
           item.priceAtOrder,
           item.status,
           item.createdAt,
-        ]
+        ],
       );
     }
 
     return {
       ok: true,
-      message: 'Seed D7 Order Items สำเร็จ',
+      message: "Seed D7 Order Items สำเร็จ",
     };
-
   } catch (error) {
-    console.error(
-      'seedOrderItems failed:',
-      error
-    );
+    console.error("seedOrderItems failed:", error);
 
     return {
       ok: false,
-      message:
-        'Seed D7 Order Items ไม่สำเร็จ',
+      message: "Seed D7 Order Items ไม่สำเร็จ",
     };
   }
 }

@@ -1,209 +1,183 @@
-// src/db/seed/seedMenus.js
-
-
 const menus = [
-  // =====================================
-  // Category 1 : ต้ม / แกง
-  // =====================================
-
   {
     id: 1,
     categoryId: 1,
-    name: 'ต้มยำกุ้ง',
+    name: "ต้มยำกุ้ง",
     available: 1,
   },
 
   {
     id: 2,
     categoryId: 1,
-    name: 'ต้มข่าไก่',
+    name: "ต้มข่าไก่",
     available: 1,
   },
 
   {
     id: 3,
     categoryId: 1,
-    name: 'แกงเขียวหวานไก่',
+    name: "แกงเขียวหวานไก่",
     available: 1,
   },
 
   {
     id: 4,
     categoryId: 1,
-    name: 'แกงจืดเต้าหู้หมูสับ',
+    name: "แกงจืดเต้าหู้หมูสับ",
     available: 1,
   },
 
   {
     id: 5,
     categoryId: 1,
-    name: 'แกงเผ็ดเป็ดย่าง',
-    available: 0,
+    name: "แกงเผ็ดเป็ดย่าง",
+    available: 1,
   },
-
-
-  // =====================================
-  // Category 2 : ผัด / จานหลัก
-  // =====================================
 
   {
     id: 6,
     categoryId: 2,
-    name: 'ผัดกะเพราหมูสับ',
+    name: "ผัดกะเพราหมูสับ",
     available: 1,
   },
 
   {
     id: 7,
     categoryId: 2,
-    name: 'ผัดกะเพราไก่',
+    name: "ผัดกะเพราไก่",
     available: 1,
   },
 
   {
     id: 8,
     categoryId: 2,
-    name: 'ผัดผักรวม',
+    name: "ผัดผักรวม",
     available: 1,
   },
 
   {
     id: 9,
     categoryId: 2,
-    name: 'ข้าวผัดกุ้ง',
+    name: "ข้าวผัดกุ้ง",
     available: 1,
   },
 
   {
     id: 10,
     categoryId: 2,
-    name: 'ผัดซีอิ๊วหมู',
+    name: "ผัดซีอิ๊วหมู",
     available: 1,
   },
 
   {
     id: 11,
     categoryId: 2,
-    name: 'ผัดไทยกุ้ง',
+    name: "ผัดไทยกุ้ง",
     available: 1,
   },
 
   {
     id: 12,
     categoryId: 2,
-    name: 'ข้าวไข่เจียวหมูสับ',
+    name: "ข้าวไข่เจียวหมูสับ",
     available: 1,
   },
-
-
-  // =====================================
-  // Category 3 : ทอด / ยำ
-  // =====================================
 
   {
     id: 13,
     categoryId: 3,
-    name: 'ปลาทอดสมุนไพร',
+    name: "ปลาทอดสมุนไพร",
     available: 1,
   },
 
   {
     id: 14,
     categoryId: 3,
-    name: 'ไก่ทอด',
+    name: "ไก่ทอด",
     available: 1,
   },
 
   {
     id: 15,
     categoryId: 3,
-    name: 'ปีกไก่ทอด',
+    name: "ปีกไก่ทอด",
     available: 1,
   },
 
   {
     id: 16,
     categoryId: 3,
-    name: 'ส้มตำไทย',
+    name: "ส้มตำไทย",
     available: 1,
   },
 
   {
     id: 17,
     categoryId: 3,
-    name: 'ยำวุ้นเส้น',
+    name: "ยำวุ้นเส้น",
     available: 1,
   },
 
   {
     id: 18,
     categoryId: 3,
-    name: 'ยำทะเล',
+    name: "ยำทะเล",
     available: 1,
   },
 
   {
     id: 19,
     categoryId: 3,
-    name: 'ทอดมันปลา',
+    name: "ทอดมันปลา",
     available: 1,
   },
-
-
-  // =====================================
-  // Category 4 : เครื่องดื่ม / ของหวาน
-  // =====================================
 
   {
     id: 20,
     categoryId: 4,
-    name: 'น้ำเปล่า',
+    name: "น้ำเปล่า",
     available: 1,
   },
 
   {
     id: 21,
     categoryId: 4,
-    name: 'ชาเย็น',
+    name: "ชาเย็น",
     available: 1,
   },
 
   {
     id: 22,
     categoryId: 4,
-    name: 'กาแฟเย็น',
+    name: "กาแฟเย็น",
     available: 1,
   },
 
   {
     id: 23,
     categoryId: 4,
-    name: 'น้ำอัดลม',
+    name: "น้ำอัดลม",
     available: 1,
   },
 
   {
     id: 24,
     categoryId: 4,
-    name: 'ไอศกรีม',
+    name: "ไอศกรีม",
     available: 1,
   },
 
   {
     id: 25,
     categoryId: 4,
-    name: 'ขนมหวานรวม',
+    name: "ขนมหวานรวม",
     available: 1,
   },
 ];
 
-
 export async function SMenus(db) {
-
   try {
-
     for (const menu of menus) {
-
       await db.runAsync(
         `
         INSERT OR IGNORE INTO menus (
@@ -214,33 +188,20 @@ export async function SMenus(db) {
         )
         VALUES (?, ?, ?, ?)
         `,
-        [
-          menu.id,
-          menu.categoryId,
-          menu.name,
-          menu.available,
-        ]
+        [menu.id, menu.categoryId, menu.name, menu.available],
       );
     }
 
-
     return {
       ok: true,
-      message: 'Seed D3 Menus สำเร็จ',
+      message: "Seed D3 Menus สำเร็จ",
     };
-
-
   } catch (error) {
-
-    console.error(
-      'seedMenus failed:',
-      error
-    );
-
+    console.error("seedMenus failed:", error);
 
     return {
       ok: false,
-      message: 'Seed D3 Menus ไม่สำเร็จ',
+      message: "Seed D3 Menus ไม่สำเร็จ",
     };
   }
 }

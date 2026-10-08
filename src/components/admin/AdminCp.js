@@ -1,57 +1,37 @@
-// src/components/admin/AdminCp.js
-
 import React from "react";
 
-import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView, } from "react-native";
-import { colors, spacing, radius, fontSize, fontWeight, } from "../../styles/theme";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  ScrollView,
+} from "react-native";
+import {
+  colors,
+  spacing,
+  radius,
+  fontSize,
+  fontWeight,
+} from "../../styles/theme";
 
-import { appStyles } from "../../styles/appStyles";
-
-
-// ======================================================
-// 1. SummaryCard
-// ======================================================
-// ใช้ใน Dashboard / Report
-// แสดงตัวเลขสรุป เช่น
-// ยอดขาย, จำนวน Bill, โต๊ะว่าง, Order
-//
-
-export function SummaryCard({
-  title,
-  value,
-  subtitle,
-}) {
+export function SummaryCard({ title, value, subtitle = undefined }) {
   return (
     <View style={styles.summaryCard}>
-      <Text style={styles.summaryTitle}>
-        {title}
-      </Text>
+      <Text style={styles.summaryTitle}>{title}</Text>
 
-      <Text style={styles.summaryValue}>
-        {value}
-      </Text>
+      <Text style={styles.summaryValue}>{value}</Text>
 
-      {subtitle ? (
-        <Text style={styles.summarySubtitle}>
-          {subtitle}
-        </Text>
-      ) : null}
+      {subtitle ? <Text style={styles.summarySubtitle}>{subtitle}</Text> : null}
     </View>
   );
 }
 
-
-// ======================================================
-// 2. TableCard
-// ======================================================
-// ใช้ใน TableOverview
-// แสดงเลขโต๊ะ + สถานะโต๊ะ
-//
-
 export function TableCard({
   tableNumber,
   status = "available",
-  onPress,
+  onPress = undefined,
 }) {
   const isAvailable = status === "available";
 
@@ -60,17 +40,12 @@ export function TableCard({
       style={[
         styles.tableCard,
 
-        isAvailable
-          ? styles.tableAvailable
-          : styles.tableOccupied,
+        isAvailable ? styles.tableAvailable : styles.tableOccupied,
       ]}
       onPress={onPress}
     >
       <Text
-        style={[
-          styles.tableNumber,
-          !isAvailable && styles.tableNumberOccupied,
-        ]}
+        style={[styles.tableNumber, !isAvailable && styles.tableNumberOccupied]}
       >
         {tableNumber}
       </Text>
@@ -78,9 +53,7 @@ export function TableCard({
       <Text
         style={[
           styles.tableStatus,
-          isAvailable
-            ? styles.statusAvailable
-            : styles.statusOccupied,
+          isAvailable ? styles.statusAvailable : styles.statusOccupied,
         ]}
       >
         {isAvailable ? "ว่าง" : "ไม่ว่าง"}
@@ -88,14 +61,6 @@ export function TableCard({
     </TouchableOpacity>
   );
 }
-
-
-// ======================================================
-// 3. RecentOrderRow
-// ======================================================
-// ใช้ใน Dashboard
-// แสดง Order ล่าสุด
-//
 
 export function RecentOrderRow({
   orderId,
@@ -108,13 +73,9 @@ export function RecentOrderRow({
   return (
     <View style={styles.recentOrderRow}>
       <View style={styles.recentOrderMain}>
-        <Text style={styles.orderId}>
-          #{orderId}
-        </Text>
+        <Text style={styles.orderId}>#{orderId}</Text>
 
-        <Text style={styles.orderMenu}>
-          {menuName}
-        </Text>
+        <Text style={styles.orderMenu}>{menuName}</Text>
 
         <Text style={styles.orderDetail}>
           โต๊ะ {tableNumber} • จำนวน {quantity}
@@ -122,22 +83,10 @@ export function RecentOrderRow({
       </View>
 
       <View style={styles.recentOrderRight}>
-        <Text style={styles.orderTime}>
-          {time}
-        </Text>
+        <Text style={styles.orderTime}>{time}</Text>
 
-        <View
-          style={[
-            styles.statusBadge,
-            getStatusStyle(status).background,
-          ]}
-        >
-          <Text
-            style={[
-              styles.statusText,
-              getStatusStyle(status).text,
-            ]}
-          >
+        <View style={[styles.statusBadge, getStatusStyle(status).background]}>
+          <Text style={[styles.statusText, getStatusStyle(status).text]}>
             {getStatusLabel(status)}
           </Text>
         </View>
@@ -146,65 +95,37 @@ export function RecentOrderRow({
   );
 }
 
-
-// ======================================================
-// 4. QuickActionButton
-// ======================================================
-// ใช้ใน Admin Dashboard
-// เช่น
-// จัดการโต๊ะ
-// จัดการเมนู
-// ดูรายงาน
-// Reset
-//
-
 export function QuickActionButton({
   title,
-  subtitle,
-  icon,
-  onPress,
+  subtitle = undefined,
+  icon = undefined,
+  onPress = undefined,
 }) {
   return (
     <TouchableOpacity
       style={styles.quickActionButton}
       onPress={onPress}
     >
-      {icon ? (
-        <Text style={styles.quickActionIcon}>
-          {icon}
-        </Text>
-      ) : null}
+      {icon ? <Text style={styles.quickActionIcon}>{icon}</Text> : null}
 
       <View style={styles.quickActionText}>
-        <Text style={styles.quickActionTitle}>
-          {title}
-        </Text>
+        <Text style={styles.quickActionTitle}>{title}</Text>
 
         {subtitle ? (
-          <Text style={styles.quickActionSubtitle}>
-            {subtitle}
-          </Text>
+          <Text style={styles.quickActionSubtitle}>{subtitle}</Text>
         ) : null}
       </View>
     </TouchableOpacity>
   );
 }
 
-
-// ======================================================
-// 5. BillRow
-// ======================================================
-// ใช้ใน BillHistory
-// แสดงข้อมูล Bill แต่ละรายการ
-//
-
 export function BillRow({
   billId,
   tableNumber,
-  openedAt,
+  openedAt = undefined,
   closedAt,
   total,
-  onPress,
+  onPress = undefined,
 }) {
   return (
     <TouchableOpacity
@@ -212,47 +133,25 @@ export function BillRow({
       onPress={onPress}
     >
       <View style={styles.billMain}>
-        <Text style={styles.billId}>
-          Bill #{billId}
-        </Text>
+        <Text style={styles.billId}>Bill #{billId}</Text>
 
-        <Text style={styles.billTable}>
-          โต๊ะ {tableNumber}
-        </Text>
+        <Text style={styles.billTable}>โต๊ะ {tableNumber}</Text>
       </View>
 
       <View style={styles.billTime}>
-        <Text style={styles.billDate}>
-          {openedAt}
-        </Text>
+        <Text style={styles.billDate}>{openedAt}</Text>
 
         {closedAt ? (
-          <Text style={styles.billClosed}>
-            ปิด {closedAt}
-          </Text>
+          <Text style={styles.billClosed}>ปิด {closedAt}</Text>
         ) : null}
       </View>
 
-      <Text style={styles.billTotal}>
-        {total} บาท
-      </Text>
+      <Text style={styles.billTotal}>{total} บาท</Text>
     </TouchableOpacity>
   );
 }
 
-
-// ======================================================
-// 6. BillDetailModal
-// ======================================================
-// ใช้เปิดรายละเอียด Bill
-// ดู Round / Order Item / Total
-//
-
-export function BillDetailModal({
-  visible,
-  bill,
-  onClose,
-}) {
+export function BillDetailModal({ visible, bill, onClose }) {
   if (!bill) {
     return null;
   }
@@ -266,53 +165,41 @@ export function BillDetailModal({
     >
       <View style={styles.modalOverlay}>
         <View style={styles.billModal}>
-
-          {/* Header */}
+          {}
           <View style={styles.modalHeader}>
             <View>
-              <Text style={styles.modalTitle}>
-                Bill #{bill.billId}
-              </Text>
+              <Text style={styles.modalTitle}>Bill #{bill.billId}</Text>
 
-              <Text style={styles.modalSubtitle}>
-                โต๊ะ {bill.tableNumber}
-              </Text>
+              <Text style={styles.modalSubtitle}>โต๊ะ {bill.tableNumber}</Text>
             </View>
 
             <TouchableOpacity
               onPress={onClose}
               style={styles.closeButton}
             >
-              <Text style={styles.closeButtonText}>
-                ✕
-              </Text>
+              <Text style={styles.closeButtonText}>✕</Text>
             </TouchableOpacity>
           </View>
 
-
-          {/* Items */}
+          {}
           <ScrollView
             style={styles.billItemList}
             showsVerticalScrollIndicator={false}
           >
             {bill.rounds?.map((round) => (
               <View
-                key={round.roundId}
+                key={round.roundId ?? round.roundNumber}
                 style={styles.roundSection}
               >
-                <Text style={styles.roundTitle}>
-                  Round {round.roundNumber}
-                </Text>
+                <Text style={styles.roundTitle}>Round {round.roundNumber}</Text>
 
                 {round.items?.map((item) => (
                   <View
-                    key={item.orderItemId}
+                    key={item.orderItemId ?? item.id}
                     style={styles.billItemRow}
                   >
                     <View style={styles.billItemMain}>
-                      <Text style={styles.billItemName}>
-                        {item.menuName}
-                      </Text>
+                      <Text style={styles.billItemName}>{item.menuName}</Text>
 
                       <Text style={styles.billItemDetail}>
                         x {item.quantity}
@@ -334,41 +221,24 @@ export function BillDetailModal({
             ))}
           </ScrollView>
 
-
-          {/* Total */}
+          {}
           <View style={styles.billTotalSection}>
-            <Text style={styles.billTotalLabel}>
-              ยอดรวม
-            </Text>
+            <Text style={styles.billTotalLabel}>ยอดรวม</Text>
 
-            <Text style={styles.billTotalValue}>
-              {bill.total} บาท
-            </Text>
+            <Text style={styles.billTotalValue}>{bill.total} บาท</Text>
           </View>
-
 
           <TouchableOpacity
             style={styles.closeModalButton}
             onPress={onClose}
           >
-            <Text style={styles.closeModalButtonText}>
-              ปิด
-            </Text>
+            <Text style={styles.closeModalButtonText}>ปิด</Text>
           </TouchableOpacity>
-
         </View>
       </View>
     </Modal>
   );
 }
-
-
-// ======================================================
-// 7. MenuManageRow
-// ======================================================
-// ใช้ใน MenuManagement
-// แสดง Menu + ราคา + Availability
-//
 
 export function MenuManageRow({
   menuName,
@@ -377,39 +247,30 @@ export function MenuManageRow({
   isAvailable,
   onEdit,
   onToggle,
+  disabled = false,
 }) {
   return (
     <View style={styles.menuManageRow}>
-
       <View style={styles.menuManageMain}>
-        <Text style={styles.menuName}>
-          {menuName}
-        </Text>
+        <Text style={styles.menuName}>{menuName}</Text>
 
-        <Text style={styles.menuCategory}>
-          {categoryName}
-        </Text>
+        <Text style={styles.menuCategory}>{categoryName}</Text>
       </View>
 
-      <Text style={styles.menuPrice}>
-        {price} บาท
-      </Text>
+      <Text style={styles.menuPrice}>{price} บาท</Text>
 
       <TouchableOpacity
         style={[
           styles.availabilityButton,
-          isAvailable
-            ? styles.availableButton
-            : styles.unavailableButton,
+          isAvailable ? styles.availableButton : styles.unavailableButton,
         ]}
+        disabled={disabled}
         onPress={onToggle}
       >
         <Text
           style={[
             styles.availabilityText,
-            isAvailable
-              ? styles.availableText
-              : styles.unavailableText,
+            isAvailable ? styles.availableText : styles.unavailableText,
           ]}
         >
           {isAvailable ? "เปิดขาย" : "ปิดขาย"}
@@ -418,89 +279,42 @@ export function MenuManageRow({
 
       <TouchableOpacity
         style={styles.editButton}
+        disabled={disabled}
         onPress={onEdit}
       >
-        <Text style={styles.editButtonText}>
-          แก้ไข
-        </Text>
+        <Text style={styles.editButtonText}>แก้ไข</Text>
       </TouchableOpacity>
-
     </View>
   );
 }
 
-
-// ======================================================
-// 8. ReportCard
-// ======================================================
-// ใช้ใน DailyReport
-// แสดงข้อมูลสรุปรายงาน
-//
-
-export function ReportCard({
-  title,
-  value,
-  subtitle,
-}) {
+export function ReportCard({ title, value, subtitle = undefined }) {
   return (
     <View style={styles.reportCard}>
-      <Text style={styles.reportTitle}>
-        {title}
-      </Text>
+      <Text style={styles.reportTitle}>{title}</Text>
 
-      <Text style={styles.reportValue}>
-        {value}
-      </Text>
+      <Text style={styles.reportValue}>{value}</Text>
 
-      {subtitle ? (
-        <Text style={styles.reportSubtitle}>
-          {subtitle}
-        </Text>
-      ) : null}
+      {subtitle ? <Text style={styles.reportSubtitle}>{subtitle}</Text> : null}
     </View>
   );
 }
 
-
-// ======================================================
-// 9. WarningCard
-// ======================================================
-// ใช้แสดง Warning เช่น
-// Reset Transactions
-// ข้อมูลที่กำลังจะถูกลบ
-//
-
-export function WarningCard({
-  title,
-  message,
-}) {
+export function WarningCard({ title, message }) {
   return (
     <View style={styles.warningCard}>
-
       <View style={styles.warningIconBox}>
-        <Text style={styles.warningIcon}>
-          !
-        </Text>
+        <Text style={styles.warningIcon}>!</Text>
       </View>
 
       <View style={styles.warningContent}>
-        <Text style={styles.warningTitle}>
-          {title}
-        </Text>
+        <Text style={styles.warningTitle}>{title}</Text>
 
-        <Text style={styles.warningMessage}>
-          {message}
-        </Text>
+        <Text style={styles.warningMessage}>{message}</Text>
       </View>
-
     </View>
   );
 }
-
-
-// ======================================================
-// Helper
-// ======================================================
 
 function getStatusLabel(status) {
   switch (status) {
@@ -552,17 +366,7 @@ function getStatusStyle(status) {
   }
 }
 
-
-// ======================================================
-// Styles
-// ======================================================
-
 const styles = StyleSheet.create({
-
-  // =============================
-  // Summary Card
-  // =============================
-
   summaryCard: {
     backgroundColor: colors.surface,
     borderRadius: radius.card,
@@ -588,13 +392,8 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
 
-
-  // =============================
-  // Table Card
-  // =============================
-
   tableCard: {
-    width: 150,
+    width: "100%",
     height: 120,
     borderRadius: radius.card,
     borderWidth: 2,
@@ -635,11 +434,6 @@ const styles = StyleSheet.create({
   statusOccupied: {
     color: colors.danger,
   },
-
-
-  // =============================
-  // Recent Order
-  // =============================
 
   recentOrderRow: {
     backgroundColor: colors.surface,
@@ -687,11 +481,6 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
 
-
-  // =============================
-  // Quick Action
-  // =============================
-
   quickActionButton: {
     minHeight: 70,
 
@@ -729,11 +518,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     color: colors.textMuted,
   },
-
-
-  // =============================
-  // Bill Row
-  // =============================
 
   billRow: {
     minHeight: 70,
@@ -788,11 +572,6 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.bold,
     color: colors.primary,
   },
-
-
-  // =============================
-  // Modal
-  // =============================
 
   modalOverlay: {
     flex: 1,
@@ -947,12 +726,9 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.bold,
   },
 
-
-  // =============================
-  // Menu Management
-  // =============================
-
   menuManageRow: {
+    flexWrap: "wrap",
+    gap: spacing.sm,
     minHeight: 72,
 
     backgroundColor: colors.surface,
@@ -968,7 +744,8 @@ const styles = StyleSheet.create({
   },
 
   menuManageMain: {
-    flex: 1,
+    flexGrow: 1,
+    flexBasis: "100%",
   },
 
   menuName: {
@@ -984,7 +761,8 @@ const styles = StyleSheet.create({
   },
 
   menuPrice: {
-    width: 100,
+    flexGrow: 1,
+    minWidth: 70,
     fontSize: fontSize.md,
     fontWeight: fontWeight.bold,
     color: colors.textPrimary,
@@ -1040,11 +818,6 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
   },
 
-
-  // =============================
-  // Report
-  // =============================
-
   reportCard: {
     backgroundColor: colors.surface,
 
@@ -1074,11 +847,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     color: colors.textMuted,
   },
-
-
-  // =============================
-  // Warning
-  // =============================
 
   warningCard: {
     backgroundColor: colors.warningBg,
@@ -1135,11 +903,6 @@ const styles = StyleSheet.create({
 
     lineHeight: 20,
   },
-
-
-  // =============================
-  // Status
-  // =============================
 
   statusBadge: {
     borderRadius: radius.md,

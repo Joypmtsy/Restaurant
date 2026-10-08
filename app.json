@@ -22,7 +22,10 @@
     },
     "plugins": [
       "expo-sqlite",
-      "expo-asset"
-    ]
+      "expo-asset",
+      "expo-router",
+      "expo-status-bar"
+    ],
+    "scheme": "honeyrestaurant"
   }
 }
