@@ -12,10 +12,10 @@ export function CartProvider({ children }) {
         ...current,
         [billId]: (exists
           ? cart.map((item) =>
-              item.id === menu.id ? { ...item, qty: item.qty + delta } : item,
+              item.id === menu.id ? { ...item, qty: item.qty + delta } : item
             )
           : [...cart, { ...menu, qty: delta }]
-        ).filter((item) => item.qty > 0),
+        ).filter((item) => item.qty > 0)
       };
     });
   const clear = (billId) => {
@@ -39,11 +39,11 @@ export function CartProvider({ children }) {
           setCarts((current) => ({
             ...current,
             [id]: (current[id] || []).map((item) =>
-              item.id === menuId ? { ...item, note } : item,
-            ),
+              item.id === menuId ? { ...item, note } : item
+            )
           })),
         setNote: (id, note) =>
-          setNotes((current) => ({ ...current, [id]: note })),
+          setNotes((current) => ({ ...current, [id]: note }))
       }}
     >
       {children}
@@ -61,6 +61,6 @@ export function useCart(billId) {
     clear: () => context.clear(billId),
     clearAll: context.clearAll,
     setItemNote: (menuId, note) => context.setItemNote(billId, menuId, note),
-    setNote: (note) => context.setNote(billId, note),
+    setNote: (note) => context.setNote(billId, note)
   };
 }

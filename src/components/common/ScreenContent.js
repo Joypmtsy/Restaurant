@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  ActivityIndicator,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScreenHeader } from "./CommonCp";
 import { appStyles } from "../../styles/appStyles";
@@ -14,7 +8,7 @@ export function ScreenContent({
   title,
   subtitle = "HONEY RESTAURANT",
   rightText = undefined,
-  children = undefined,
+  children = undefined
 }) {
   return (
     <SafeAreaView
@@ -44,18 +38,18 @@ export function FilterBar({ options, value, onChange }) {
           key={option.key}
           accessibilityRole="button"
           accessibilityState={{
-            selected: value === option.key,
+            selected: value === option.key
           }}
           style={[
             screenStyles.filter,
-            value === option.key && screenStyles.filterActive,
+            value === option.key && screenStyles.filterActive
           ]}
           onPress={() => onChange(option.key)}
         >
           <Text
             style={[
               screenStyles.filterText,
-              value === option.key && screenStyles.filterTextActive,
+              value === option.key && screenStyles.filterTextActive
             ]}
           >
             {option.label}
