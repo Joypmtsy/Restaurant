@@ -6,5 +6,10 @@
     "strict": false,
     "noEmit": true
   },
-  "include": ["App.js", "index.js", "src/**/*.js"]
+  "include": [
+    "App.js",
+    "index.js",
+    "src/**/*.js",
+    "src/**/*.jsx"
+  ]
 }
