@@ -1,7 +1,6 @@
-const queues = new WeakMap();
+let writeQueue = Promise.resolve();
 export function transaction(db, task) {
-  const previous = queues.get(db) || Promise.resolve();
-  const next = previous
+  const next = writeQueue
     .catch(() => {})
     .then(async () => {
       let value;
@@ -11,7 +10,7 @@ export function transaction(db, task) {
       });
       return value;
     });
-  queues.set(db, next);
+  writeQueue = next;
   return next;
 }
 export function resultData(result) {

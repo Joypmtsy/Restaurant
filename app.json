@@ -20,12 +20,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-sqlite",
-      "expo-asset",
-      "expo-router",
-      "expo-status-bar"
-    ],
+    "plugins": ["expo-sqlite", "expo-asset", "expo-status-bar"],
     "scheme": "honeyrestaurant"
   }
 }

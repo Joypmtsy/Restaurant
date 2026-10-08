@@ -3,6 +3,10 @@ import { colors, spacing, radius, fontSize, fontWeight } from "./theme";
 
 export const screenStyles = StyleSheet.create({
   stack: { gap: spacing.lg },
+  navigation: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+  },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: spacing.md },
   filter: {
     minHeight: 44,

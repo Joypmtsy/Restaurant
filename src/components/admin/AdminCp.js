@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import {
   colors,
   spacing,
@@ -151,95 +144,6 @@ export function BillRow({
   );
 }
 
-export function BillDetailModal({ visible, bill, onClose }) {
-  if (!bill) {
-    return null;
-  }
-
-  return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.billModal}>
-          {}
-          <View style={styles.modalHeader}>
-            <View>
-              <Text style={styles.modalTitle}>Bill #{bill.billId}</Text>
-
-              <Text style={styles.modalSubtitle}>โต๊ะ {bill.tableNumber}</Text>
-            </View>
-
-            <TouchableOpacity
-              onPress={onClose}
-              style={styles.closeButton}
-            >
-              <Text style={styles.closeButtonText}>✕</Text>
-            </TouchableOpacity>
-          </View>
-
-          {}
-          <ScrollView
-            style={styles.billItemList}
-            showsVerticalScrollIndicator={false}
-          >
-            {bill.rounds?.map((round) => (
-              <View
-                key={round.roundId ?? round.roundNumber}
-                style={styles.roundSection}
-              >
-                <Text style={styles.roundTitle}>Round {round.roundNumber}</Text>
-
-                {round.items?.map((item) => (
-                  <View
-                    key={item.orderItemId ?? item.id}
-                    style={styles.billItemRow}
-                  >
-                    <View style={styles.billItemMain}>
-                      <Text style={styles.billItemName}>{item.menuName}</Text>
-
-                      <Text style={styles.billItemDetail}>
-                        x {item.quantity}
-                      </Text>
-
-                      {item.note ? (
-                        <Text style={styles.billItemNote}>
-                          หมายเหตุ: {item.note}
-                        </Text>
-                      ) : null}
-                    </View>
-
-                    <Text style={styles.billItemPrice}>
-                      {item.quantity * item.priceAtOrder} บาท
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-          </ScrollView>
-
-          {}
-          <View style={styles.billTotalSection}>
-            <Text style={styles.billTotalLabel}>ยอดรวม</Text>
-
-            <Text style={styles.billTotalValue}>{bill.total} บาท</Text>
-          </View>
-
-          <TouchableOpacity
-            style={styles.closeModalButton}
-            onPress={onClose}
-          >
-            <Text style={styles.closeModalButtonText}>ปิด</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
-  );
-}
-
 export function MenuManageRow({
   menuName,
   categoryName,
@@ -284,18 +188,6 @@ export function MenuManageRow({
       >
         <Text style={styles.editButtonText}>แก้ไข</Text>
       </TouchableOpacity>
-    </View>
-  );
-}
-
-export function ReportCard({ title, value, subtitle = undefined }) {
-  return (
-    <View style={styles.reportCard}>
-      <Text style={styles.reportTitle}>{title}</Text>
-
-      <Text style={styles.reportValue}>{value}</Text>
-
-      {subtitle ? <Text style={styles.reportSubtitle}>{subtitle}</Text> : null}
     </View>
   );
 }
@@ -573,159 +465,6 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
 
-  modalOverlay: {
-    flex: 1,
-
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-
-    justifyContent: "center",
-    alignItems: "center",
-
-    padding: spacing.xxl,
-  },
-
-  billModal: {
-    width: "85%",
-    maxHeight: "85%",
-
-    backgroundColor: colors.surface,
-
-    borderRadius: radius.card,
-
-    padding: spacing.xl,
-  },
-
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-
-    marginBottom: spacing.lg,
-  },
-
-  modalTitle: {
-    fontSize: fontSize.title,
-    fontWeight: fontWeight.bold,
-    color: colors.textPrimary,
-  },
-
-  modalSubtitle: {
-    marginTop: spacing.xs,
-    color: colors.textMuted,
-    fontSize: fontSize.sm,
-  },
-
-  closeButton: {
-    width: 36,
-    height: 36,
-
-    borderRadius: radius.round,
-
-    backgroundColor: colors.surfaceLight,
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  closeButtonText: {
-    fontSize: fontSize.md,
-    color: colors.textSecondary,
-  },
-
-  billItemList: {
-    maxHeight: 400,
-  },
-
-  roundSection: {
-    marginBottom: spacing.lg,
-  },
-
-  roundTitle: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.bold,
-    color: colors.primary,
-    marginBottom: spacing.sm,
-  },
-
-  billItemRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-
-    paddingVertical: spacing.sm,
-
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-
-  billItemMain: {
-    flex: 1,
-  },
-
-  billItemName: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.semibold,
-    color: colors.textPrimary,
-  },
-
-  billItemDetail: {
-    marginTop: spacing.xs,
-    fontSize: fontSize.sm,
-    color: colors.textMuted,
-  },
-
-  billItemNote: {
-    marginTop: spacing.xs,
-    fontSize: fontSize.xs,
-    color: colors.textMuted,
-  },
-
-  billItemPrice: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.bold,
-    color: colors.textPrimary,
-  },
-
-  billTotalSection: {
-    marginTop: spacing.lg,
-
-    paddingTop: spacing.lg,
-
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-
-  billTotalLabel: {
-    fontSize: fontSize.lg,
-    color: colors.textSecondary,
-  },
-
-  billTotalValue: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.primary,
-  },
-
-  closeModalButton: {
-    marginTop: spacing.lg,
-
-    backgroundColor: colors.primary,
-
-    paddingVertical: spacing.md,
-
-    borderRadius: radius.xl,
-
-    alignItems: "center",
-  },
-
-  closeModalButtonText: {
-    color: colors.textWhite,
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.bold,
-  },
-
   menuManageRow: {
     flexWrap: "wrap",
     gap: spacing.sm,
@@ -816,36 +555,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.xs,
     color: colors.textPrimary,
     fontWeight: fontWeight.semibold,
-  },
-
-  reportCard: {
-    backgroundColor: colors.surface,
-
-    borderRadius: radius.card,
-
-    padding: spacing.xl,
-
-    flex: 1,
-  },
-
-  reportTitle: {
-    fontSize: fontSize.sm,
-    color: colors.textMuted,
-  },
-
-  reportValue: {
-    marginTop: spacing.xs,
-
-    fontSize: fontSize.title,
-    fontWeight: fontWeight.bold,
-    color: colors.textPrimary,
-  },
-
-  reportSubtitle: {
-    marginTop: spacing.xs,
-
-    fontSize: fontSize.sm,
-    color: colors.textMuted,
   },
 
   warningCard: {

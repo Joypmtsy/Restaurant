@@ -1,35 +1,36 @@
 import React from "react";
-import { router } from "expo-router";
+import { useScreenNavigation } from "../../context/NavigationContext";
 import { View } from "react-native";
 import { PrimaryButton } from "../common/CommonCp";
 import { screenStyles } from "../../styles/screenStyles";
 
 export function CustomerNavigation({ billId }) {
+  const navigation = useScreenNavigation();
   return (
     <View style={screenStyles.wrap}>
       {[
         {
           title: "เมนู",
           open: () =>
-            router.navigate({ pathname: "/customer/menu", params: { billId } }),
+            navigation.open({ screen: "CMenuScreen", params: { billId } }),
         },
         {
           title: "ตะกร้า",
           open: () =>
-            router.navigate({ pathname: "/customer/cart", params: { billId } }),
+            navigation.open({ screen: "CartScreen", params: { billId } }),
         },
         {
           title: "สถานะ",
           open: () =>
-            router.navigate({
-              pathname: "/customer/orders",
+            navigation.open({
+              screen: "COrderScreen",
               params: { billId },
             }),
         },
         {
           title: "บิล",
           open: () =>
-            router.navigate({ pathname: "/customer/bill", params: { billId } }),
+            navigation.open({ screen: "CBillScreen", params: { billId } }),
         },
       ].map(({ title, open }) => (
         <PrimaryButton

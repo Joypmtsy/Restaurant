@@ -11,26 +11,28 @@ import { transaction, positiveId, resultData } from "./transaction";
 
 export async function initializeRestaurant(db) {
   resultData(await initDb(db));
-  await db.execAsync(
-    "CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);",
-  );
-  const seeded = await db.getFirstAsync(
-    "SELECT value FROM app_meta WHERE key = 'master_seeded'",
-  );
-  if (!seeded) {
-    await transaction(db, async (txn) => {
-      const count = await txn.getFirstAsync(
-        "SELECT COUNT(*) AS count FROM menus",
+  await transaction(db, async (txn) => {
+    const version = await txn.getFirstAsync("PRAGMA user_version");
+    if (version.user_version < 1) {
+      const fractional = await txn.getFirstAsync(
+        "SELECT COUNT(*) AS count FROM (SELECT price AS amount FROM menu_prices UNION ALL SELECT price_at_order AS amount FROM order_items UNION ALL SELECT amount FROM payments) WHERE amount % 100 != 0",
       );
-      if (!count.count) {
-        for (const seed of [STables, SCategories, SMenus, SMenuPrices])
-          resultData(await seed(txn));
+      if (fractional.count > 0) {
+        throw new Error(
+          "ข้อมูลเดิมมีเศษสตางค์ จึงยังแปลงเป็นบาทจำนวนเต็มไม่ได้",
+        );
       }
-      await txn.runAsync(
-        "INSERT OR REPLACE INTO app_meta (key, value) VALUES ('master_seeded', '1')",
+      await txn.execAsync(
+        "UPDATE menu_prices SET price = price / 100; UPDATE order_items SET price_at_order = price_at_order / 100; UPDATE payments SET amount = amount / 100; PRAGMA user_version = 1;",
       );
-    });
-  }
+    }
+    const row = await txn.getFirstAsync("SELECT COUNT(*) AS count FROM menus");
+    if (row.count > 0) return;
+
+    for (const seed of [STables, SCategories, SMenus, SMenuPrices]) {
+      resultData(await seed(txn));
+    }
+  });
 }
 
 export async function tablesForScreen(db) {
@@ -52,7 +54,7 @@ export async function menusForScreen(db, availableOnly = false) {
       name: row.menu_name,
       categoryId: row.category_id,
       categoryName: row.category_name,
-      price: row.price / 100,
+      price: row.price,
       available: row.is_available === 1,
     })),
     categories: resultData(categories).map((row) => ({

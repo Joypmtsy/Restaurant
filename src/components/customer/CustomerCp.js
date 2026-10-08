@@ -53,7 +53,7 @@ export function MenuCard({ menu, onAdd, disabled = false }) {
       </Text>
 
       <View style={styles.menuBottomRow}>
-        <Text style={styles.menuPrice}>{menu.price.toFixed(2)} บาท</Text>
+        <Text style={styles.menuPrice}>{menu.price.toFixed(0)} บาท</Text>
 
         <TouchableOpacity
           style={styles.addButton}
@@ -95,7 +95,7 @@ export function CartItem({ item, onIncrease, onDecrease, disabled = false }) {
       </View>
 
       <Text style={styles.cartItemPrice}>
-        {(item.price * item.qty).toFixed(2)} บาท
+        {(item.price * item.qty).toFixed(0)} บาท
       </Text>
     </View>
   );
@@ -160,7 +160,7 @@ export function BillItem({ item }) {
 
         <Text style={styles.billItemQuantity}>x {item.quantity}</Text>
         <Text style={styles.billItemQuantity}>
-          ราคา/หน่วย {item.priceAtOrder.toFixed(2)} บาท
+          ราคา/หน่วย {item.priceAtOrder.toFixed(0)} บาท
         </Text>
 
         {item.note ? (
@@ -169,7 +169,7 @@ export function BillItem({ item }) {
       </View>
 
       <Text style={styles.billItemPrice}>
-        {(item.quantity * item.priceAtOrder).toFixed(2)} บาท
+        {(item.quantity * item.priceAtOrder).toFixed(0)} บาท
       </Text>
     </View>
   );
