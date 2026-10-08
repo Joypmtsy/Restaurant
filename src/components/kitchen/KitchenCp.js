@@ -1,13 +1,6 @@
 import React from "react";
-
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import {
-  colors,
-  spacing,
-  radius,
-  fontSize,
-  fontWeight,
-} from "../../styles/theme";
+import { colors, spacing, radius, fontSize, fontWeight } from "../../styles/theme";
 
 export function KitchenOrderCard({ order, onPress = undefined }) {
   const status = getStatusConfig(order.status);
@@ -21,24 +14,22 @@ export function KitchenOrderCard({ order, onPress = undefined }) {
       <View style={styles.orderTopRow}>
         <View style={styles.orderMain}>
           <Text style={styles.orderId}>Order #{order.orderId}</Text>
-
           <Text style={styles.tableText}>โต๊ะ {order.tableNumber}</Text>
         </View>
-
         <View
           style={[
             styles.statusBadge,
             {
-              backgroundColor: status.background,
-            },
+              backgroundColor: status.background
+            }
           ]}
         >
           <Text
             style={[
               styles.statusText,
               {
-                color: status.color,
-              },
+                color: status.color
+              }
             ]}
           >
             {status.label}
@@ -55,7 +46,6 @@ export function KitchenOrderCard({ order, onPress = undefined }) {
       {}
       <View style={styles.infoRow}>
         <Text style={styles.infoLabel}>จำนวน</Text>
-
         <Text style={styles.infoValue}>{order.quantity}</Text>
       </View>
 
@@ -63,7 +53,6 @@ export function KitchenOrderCard({ order, onPress = undefined }) {
       {order.note ? (
         <View style={styles.noteBox}>
           <Text style={styles.noteLabel}>หมายเหตุ</Text>
-
           <Text style={styles.noteText}>{order.note}</Text>
         </View>
       ) : null}
@@ -81,14 +70,11 @@ export function KitchenOrderItem({ item }) {
     <View style={styles.orderItem}>
       <View style={styles.orderItemMain}>
         <Text style={styles.orderItemName}>{item.menuName}</Text>
-
         <Text style={styles.orderItemQuantity}>จำนวน {item.quantity}</Text>
-
         {item.note ? (
           <Text style={styles.orderItemNote}>หมายเหตุ: {item.note}</Text>
         ) : null}
       </View>
-
       <Text style={styles.orderItemStatus}>
         {getStatusConfig(item.status).label}
       </Text>
@@ -99,7 +85,7 @@ export function KitchenOrderItem({ item }) {
 export function KitchenStatusButton({
   status,
   onPress = undefined,
-  disabled = false,
+  disabled = false
 }) {
   const button = getNextStatus(status);
 
@@ -120,28 +106,25 @@ function getStatusConfig(status) {
       return {
         label: "รอทำ",
         color: colors.warning,
-        background: colors.warningBg,
+        background: colors.warningBg
       };
-
     case "cooking":
       return {
         label: "กำลังทำ",
         color: colors.info,
-        background: colors.infoBg,
+        background: colors.infoBg
       };
-
     case "served":
       return {
         label: "เสิร์ฟแล้ว",
         color: colors.success,
-        background: colors.successBg,
+        background: colors.successBg
       };
-
     default:
       return {
         label: status || "-",
         color: colors.textSecondary,
-        background: colors.border,
+        background: colors.border
       };
   }
 }
@@ -151,25 +134,22 @@ function getNextStatus(status) {
     case "waiting":
       return {
         label: "เริ่มทำอาหาร",
-        nextStatus: "cooking",
+        nextStatus: "cooking"
       };
-
     case "cooking":
       return {
         label: "ทำเสร็จ / เสิร์ฟ",
-        nextStatus: "served",
+        nextStatus: "served"
       };
-
     case "served":
       return {
         label: "เสิร์ฟแล้ว",
-        nextStatus: "served",
+        nextStatus: "served"
       };
-
     default:
       return {
         label: "เปลี่ยนสถานะ",
-        nextStatus: status,
+        nextStatus: status
       };
   }
 }
@@ -177,225 +157,137 @@ function getNextStatus(status) {
 const styles = StyleSheet.create({
   orderCard: {
     backgroundColor: colors.surface,
-
     borderRadius: radius.card,
-
     padding: spacing.xl,
-
     marginBottom: spacing.lg,
-
     borderWidth: 1,
-
-    borderColor: colors.border,
+    borderColor: colors.border
   },
-
   orderTopRow: {
     flexDirection: "row",
-
     justifyContent: "space-between",
-
-    alignItems: "flex-start",
+    alignItems: "flex-start"
   },
-
-  orderMain: {
-    flex: 1,
-  },
-
+  orderMain: { flex: 1 },
   orderId: {
     fontSize: fontSize.sm,
-
     color: colors.textMuted,
-
-    fontWeight: fontWeight.semibold,
+    fontWeight: fontWeight.semibold
   },
-
   tableText: {
     fontSize: fontSize.lg,
-
     color: colors.textPrimary,
-
     fontWeight: fontWeight.bold,
-
-    marginTop: spacing.xs,
+    marginTop: spacing.xs
   },
-
   roundText: {
     fontSize: fontSize.sm,
-
     color: colors.textMuted,
-
-    marginTop: spacing.md,
+    marginTop: spacing.md
   },
-
   menuName: {
     fontSize: fontSize.xl,
-
     fontWeight: fontWeight.bold,
-
     color: colors.textPrimary,
-
-    marginTop: spacing.xs,
+    marginTop: spacing.xs
   },
-
   statusBadge: {
     borderRadius: radius.md,
-
     paddingHorizontal: spacing.md,
-
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.sm
   },
-
   statusText: {
     fontSize: fontSize.xs,
-
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.bold
   },
-
   infoRow: {
     flexDirection: "row",
-
     justifyContent: "space-between",
-
     alignItems: "center",
-
     marginTop: spacing.lg,
-
     paddingTop: spacing.md,
-
     borderTopWidth: 1,
-
-    borderTopColor: colors.border,
+    borderTopColor: colors.border
   },
-
   infoLabel: {
     fontSize: fontSize.sm,
-
-    color: colors.textMuted,
+    color: colors.textMuted
   },
-
   infoValue: {
     fontSize: fontSize.md,
-
     fontWeight: fontWeight.bold,
-
-    color: colors.textPrimary,
+    color: colors.textPrimary
   },
-
   noteBox: {
     backgroundColor: colors.surfaceLight,
-
     borderRadius: radius.md,
-
     padding: spacing.md,
-
-    marginTop: spacing.md,
+    marginTop: spacing.md
   },
-
   noteLabel: {
     fontSize: fontSize.xs,
-
     color: colors.textMuted,
-
-    marginBottom: spacing.xs,
+    marginBottom: spacing.xs
   },
-
   noteText: {
     fontSize: fontSize.sm,
-
-    color: colors.textSecondary,
+    color: colors.textSecondary
   },
-
   timeText: {
     fontSize: fontSize.xs,
-
     color: colors.textMuted,
-
     marginTop: spacing.md,
-
-    textAlign: "right",
+    textAlign: "right"
   },
-
   orderItem: {
     minHeight: 70,
-
     backgroundColor: colors.surface,
-
     paddingVertical: spacing.md,
-
     borderBottomWidth: 1,
-
     borderBottomColor: colors.border,
-
     flexDirection: "row",
-
     justifyContent: "space-between",
-
-    alignItems: "center",
+    alignItems: "center"
   },
-
   orderItemMain: {
-    flex: 1,
+    flex: 1
   },
-
   orderItemName: {
     fontSize: fontSize.lg,
-
     fontWeight: fontWeight.bold,
-
-    color: colors.textPrimary,
+    color: colors.textPrimary
   },
-
   orderItemQuantity: {
     fontSize: fontSize.sm,
-
     color: colors.textMuted,
-
-    marginTop: spacing.xs,
+    marginTop: spacing.xs
   },
-
   orderItemNote: {
     fontSize: fontSize.xs,
-
     color: colors.textMuted,
-
-    marginTop: spacing.xs,
+    marginTop: spacing.xs
   },
-
   orderItemStatus: {
     fontSize: fontSize.sm,
-
     fontWeight: fontWeight.semibold,
-
     color: colors.textSecondary,
-
-    marginLeft: spacing.lg,
+    marginLeft: spacing.lg
   },
-
   statusButton: {
     minHeight: 44,
-
     backgroundColor: colors.primary,
-
     borderRadius: radius.xl,
-
     paddingHorizontal: spacing.xl,
-
     paddingVertical: spacing.md,
-
     justifyContent: "center",
-
-    alignItems: "center",
+    alignItems: "center"
   },
-
   statusButtonDisabled: {
-    backgroundColor: colors.disabled,
+    backgroundColor: colors.disabled
   },
-
   statusButtonText: {
     color: colors.textWhite,
-
     fontSize: fontSize.md,
-
-    fontWeight: fontWeight.bold,
-  },
+    fontWeight: fontWeight.bold
+  }
 });

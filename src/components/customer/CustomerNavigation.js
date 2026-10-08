@@ -11,26 +11,26 @@ export function CustomerNavigation({ billId }) {
         {
           title: "เมนู",
           open: () =>
-            router.navigate({ pathname: "/customer/menu", params: { billId } }),
+            router.navigate({ pathname: "/customer/menu", params: { billId } })
         },
         {
           title: "ตะกร้า",
           open: () =>
-            router.navigate({ pathname: "/customer/cart", params: { billId } }),
+            router.navigate({ pathname: "/customer/cart", params: { billId } })
         },
         {
           title: "สถานะ",
           open: () =>
             router.navigate({
               pathname: "/customer/orders",
-              params: { billId },
-            }),
+              params: { billId }
+            })
         },
         {
           title: "บิล",
           open: () =>
-            router.navigate({ pathname: "/customer/bill", params: { billId } }),
-        },
+            router.navigate({ pathname: "/customer/bill", params: { billId } })
+        }
       ].map(({ title, open }) => (
         <PrimaryButton
           key={title}
