@@ -42,7 +42,6 @@ billId คือรหัสบิล roundId คือรหัสรอบส�
 | [index.js](/Users/smo/Restaurant/index.js) | ใช้ registerRootComponent เปิด App.js |
 | [metro.config.js](/Users/smo/Restaurant/metro.config.js) | ใช้ Metro config ของ Expo เพื่อสร้าง bundle |
 | [eslint.config.js](/Users/smo/Restaurant/eslint.config.js) | กฎ lint ของ Expo ตรวจโค้ด |
-| [tsconfig.json](/Users/smo/Restaurant/tsconfig.json) | TypeScript ตรวจ JavaScript ด้วย allowJs/checkJs ไม่สร้างไฟล์ผลลัพธ์ |
 | [.prettierrc.json](/Users/smo/Restaurant/.prettierrc.json) | รูปแบบโค้ด ย่อหน้า 2 ช่อง แยก JSX props ทีละบรรทัด |
 | [.prettierignore](/Users/smo/Restaurant/.prettierignore) | ไฟล์ที่ formatter ไม่ต้องจัดรูปแบบ |
 | [.gitignore](/Users/smo/Restaurant/.gitignore) | รายการที่ Git ไม่ติดตาม เช่น node_modules .expo; ไม่ได้ยกเว้น src/screens |
