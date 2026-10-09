@@ -17,7 +17,11 @@
 ## วิธีติดตั้งและรัน
 
 1. แตกไฟล์โปรเจกต์ แล้วเปิด Terminal ในโฟลเดอร์ Restaurant
+<<<<<<< HEAD
 2. ติดตั้ง Node.js 24 และ npm หากยังไม่มี
+=======
+2. ติดตั้ง Node.js และ npm หากยังไม่มี
+>>>>>>> df87c77163c96668f3cd48fd84a24dca72ee4121
 3. ติดตั้งไลบรารีของโปรเจกต์
 
 ```bash
@@ -27,7 +31,11 @@ npm install
 4. เปิดแอป
 
 ```bash
+<<<<<<< HEAD
 npx expo start --clear
+=======
+npm run android
+>>>>>>> df87c77163c96668f3cd48fd84a24dca72ee4121
 ```
 
 5. เปิด Expo Go ที่รองรับ SDK 57 แล้วสแกน QR หรือกด i เพื่อเปิด iOS Simulator หรือ a เพื่อเปิด Android Emulator หากติดตั้งไว้
