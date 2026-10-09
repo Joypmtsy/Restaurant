@@ -27,7 +27,7 @@ npm install
 4. เปิดแอป
 
 ```bash
-npx expo start --clear
+npm run android
 ```
 
 5. เปิด Expo Go ที่รองรับ SDK 57 แล้วสแกน QR หรือกด i เพื่อเปิด iOS Simulator หรือ a เพื่อเปิด Android Emulator หากติดตั้งไว้
