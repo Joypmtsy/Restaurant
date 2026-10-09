@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { useScreenNavigation } from "../../context/NavigationContext";
 import { useSQLiteContext } from "expo-sqlite";
+
 import { ScreenContent, FilterBar, EmptyState, QueryState,} from "../../components/common/ScreenContent";
 import { SectionCard, PrimaryButton, InfoRow, StatusBadge, } from "../../components/common/CommonCp";
+
 import { useRestaurantQuery, useRestaurantAction, } from "../../hooks/useRestaurantQuery";
+
 import { appStyles } from "../../styles/appStyles";
 import { screenStyles } from "../../styles/screenStyles";
+
 import { baht, tableNumber, displayTime } from "../../utils/format";
 import { SummaryCard } from "../../components/admin/AdminCp";
 import { BillItem } from "../../components/customer/CustomerCp";
+
 import { billForScreen, settleBill } from "../../db/screenDb";
 
 export default function ABillScreen() {

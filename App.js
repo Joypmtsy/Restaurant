@@ -145,17 +145,14 @@ function RestaurantScreens() {
             </Text>
             <QuickActionButton
               title="ลูกค้า"
-              subtitle="เลือกโต๊ะ สั่งอาหาร ดูสถานะและบิล"
               onPress={() => open("CTableScreen")}
             />
             <QuickActionButton
               title="ครัว"
-              subtitle="คิวอาหารและเปลี่ยนสถานะการทำอาหาร"
               onPress={() => open("KQueueScreen")}
             />
             <QuickActionButton
               title="ผู้ดูแลร้าน"
-              subtitle="โต๊ะ เมนู รับชำระเงิน และรายงาน"
               onPress={() => open("ADashboardScreen")}
             />
           </ScreenContent>
