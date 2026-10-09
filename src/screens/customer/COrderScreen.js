@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { useScreenNavigation } from "../../context/NavigationContext";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  ScreenContent,
-  FilterBar,
-  EmptyState,
-  QueryState,
-} from "../../components/common/ScreenContent";
+
+import { useScreenNavigation } from "../../context/NavigationContext";
+import { ScreenContent, FilterBar, EmptyState, QueryState } from "../../components/common/ScreenContent";
 import { useRestaurantQuery } from "../../hooks/useRestaurantQuery";
 import { screenStyles } from "../../styles/screenStyles";
 import { tableNumber } from "../../utils/format";
@@ -25,7 +21,7 @@ export default function COrderScreen() {
   const query = useRestaurantQuery(
     () => billForScreen(db, billId),
     String(billId),
-    true,
+    true
   );
   const bill = query.data;
   const orders =
@@ -37,11 +33,11 @@ export default function COrderScreen() {
         quantity: item.quantity,
         price: item.price_at_order,
         note: item.note,
-        status: item.status,
-      })),
+        status: item.status
+      }))
     ) || [];
   const filtered = orders.filter(
-    (order) => filter === "all" || order.status === filter,
+    (order) => filter === "all" || order.status === filter
   );
 
   return (

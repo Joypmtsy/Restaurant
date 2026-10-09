@@ -1,21 +1,12 @@
 import React from "react";
-import { useScreenNavigation } from "../../context/NavigationContext";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  ScreenContent,
-  EmptyState,
-  QueryState,
-} from "../../components/common/ScreenContent";
+
+import { useScreenNavigation } from "../../context/NavigationContext";
+import { ScreenContent, EmptyState, QueryState } from "../../components/common/ScreenContent";
 import { SectionCard, InfoRow } from "../../components/common/CommonCp";
-import {
-  useRestaurantQuery,
-  useRestaurantAction,
-} from "../../hooks/useRestaurantQuery";
+import { useRestaurantQuery, useRestaurantAction } from "../../hooks/useRestaurantQuery";
 import { tableNumber } from "../../utils/format";
-import {
-  KitchenOrderItem,
-  KitchenStatusButton,
-} from "../../components/kitchen/KitchenCp";
+import { KitchenOrderItem, KitchenStatusButton } from "../../components/kitchen/KitchenCp";
 import { advanceKitchenItem, kitchenDetailForScreen } from "../../db/screenDb";
 
 export default function KDetailScreen() {
@@ -26,7 +17,7 @@ export default function KDetailScreen() {
   const query = useRestaurantQuery(
     () => kitchenDetailForScreen(db, roundId),
     String(roundId),
-    true,
+    true
   );
 
   return (
@@ -58,7 +49,7 @@ export default function KDetailScreen() {
                     menuName: item.menu_name,
                     quantity: item.quantity,
                     note: item.note,
-                    status: item.status,
+                    status: item.status
                   }}
                 />
                 <KitchenStatusButton
@@ -69,7 +60,7 @@ export default function KDetailScreen() {
                       await advanceKitchenItem(
                         db,
                         item.order_item_id,
-                        item.status,
+                        item.status
                       );
                       await query.refresh();
                     })
