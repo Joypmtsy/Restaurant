@@ -1,20 +1,11 @@
 import React, { useState } from "react";
 import { Text, View } from "react-native";
-import { useScreenNavigation } from "../../context/NavigationContext";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  ScreenContent,
-  QueryState,
-} from "../../components/common/ScreenContent";
-import {
-  SectionCard,
-  PrimaryButton,
-  InfoRow,
-} from "../../components/common/CommonCp";
-import {
-  useRestaurantQuery,
-  useRestaurantAction,
-} from "../../hooks/useRestaurantQuery";
+
+import { useScreenNavigation } from "../../context/NavigationContext";
+import { ScreenContent, QueryState } from "../../components/common/ScreenContent";
+import { SectionCard, PrimaryButton, InfoRow } from "../../components/common/CommonCp";
+import { useRestaurantQuery, useRestaurantAction } from "../../hooks/useRestaurantQuery";
 import { screenStyles } from "../../styles/screenStyles";
 import { CustomerTableCard } from "../../components/customer/CustomerCp";
 import { tablesForScreen, openTable } from "../../db/screenDb";
@@ -31,8 +22,8 @@ export default function CTableScreen() {
       navigation.open({
         screen: "CMenuScreen",
         params: {
-          billId,
-        },
+          billId
+        }
       });
     });
 

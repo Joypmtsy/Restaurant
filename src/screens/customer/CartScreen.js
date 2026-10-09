@@ -1,21 +1,11 @@
 import React from "react";
 import { Text, TextInput, View } from "react-native";
-import { useScreenNavigation } from "../../context/NavigationContext";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  ScreenContent,
-  EmptyState,
-  QueryState,
-} from "../../components/common/ScreenContent";
-import {
-  SectionCard,
-  PrimaryButton,
-  InfoRow,
-} from "../../components/common/CommonCp";
-import {
-  useRestaurantQuery,
-  useRestaurantAction,
-} from "../../hooks/useRestaurantQuery";
+
+import { useScreenNavigation } from "../../context/NavigationContext";
+import { ScreenContent, EmptyState, QueryState } from "../../components/common/ScreenContent";
+import { SectionCard, PrimaryButton, InfoRow } from "../../components/common/CommonCp";
+import { useRestaurantQuery, useRestaurantAction } from "../../hooks/useRestaurantQuery";
 import { appStyles } from "../../styles/appStyles";
 import { screenStyles } from "../../styles/screenStyles";
 import { baht } from "../../utils/format";
@@ -23,6 +13,7 @@ import { CartItem } from "../../components/customer/CustomerCp";
 import { CustomerNavigation } from "../../components/customer/CustomerNavigation";
 import { useCart } from "../../context/CartContext";
 import { submitOrder, billForScreen } from "../../db/screenDb";
+
 export function CartContent({
   cart = [],
   onIncrease,
@@ -33,7 +24,7 @@ export function CartContent({
   onNoteChange,
   onItemNoteChange,
   submitting = false,
-  closed = false,
+  closed = false
 }) {
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
@@ -101,7 +92,7 @@ export default function CartScreen() {
   const query = useRestaurantQuery(
     () => billForScreen(db, billId),
     String(billId),
-    true,
+    true
   );
   const submit = () =>
     run(async () => {
@@ -111,15 +102,15 @@ export default function CartScreen() {
         cart.items.map((item) => ({
           menuId: item.id,
           quantity: item.qty,
-          note: item.note || cart.note,
-        })),
+          note: item.note || cart.note
+        }))
       );
       cart.clear();
       navigation.replace({
         screen: "COrderScreen",
         params: {
-          billId,
-        },
+          billId
+        }
       });
     });
 

@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { Text, View } from "react-native";
-import { useScreenNavigation } from "../../context/NavigationContext";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  ScreenContent,
-  FilterBar,
-  EmptyState,
-  QueryState,
-} from "../../components/common/ScreenContent";
+
+import { useScreenNavigation } from "../../context/NavigationContext";
+import { ScreenContent, FilterBar, EmptyState, QueryState } from "../../components/common/ScreenContent";
 import { PrimaryButton } from "../../components/common/CommonCp";
 import { useRestaurantQuery } from "../../hooks/useRestaurantQuery";
 import { screenStyles } from "../../styles/screenStyles";
@@ -27,20 +23,20 @@ export default function CMenuScreen() {
     async () => {
       const [menuData, bill] = await Promise.all([
         menusForScreen(db, true),
-        billForScreen(db, billId),
+        billForScreen(db, billId)
       ]);
       return {
         ...menuData,
-        bill,
+        bill
       };
     },
     String(billId),
-    true,
+    true
   );
   const data = query.data;
   const filtered =
     data?.menus.filter(
-      (menu) => category === "all" || menu.categoryId === category,
+      (menu) => category === "all" || menu.categoryId === category
     ) || [];
 
   return (
@@ -59,12 +55,12 @@ export default function CMenuScreen() {
           options={[
             {
               key: "all",
-              label: "ทั้งหมด",
+              label: "ทั้งหมด"
             },
             ...(data?.categories || []).map((item) => ({
               key: item.id,
-              label: item.name,
-            })),
+              label: item.name
+            }))
           ]}
           value={category}
           onChange={setCategory}
@@ -96,8 +92,8 @@ export default function CMenuScreen() {
             navigation.open({
               screen: "CartScreen",
               params: {
-                billId,
-              },
+                billId
+              }
             })
           }
         />

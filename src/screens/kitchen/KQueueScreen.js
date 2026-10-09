@@ -1,23 +1,13 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { useScreenNavigation } from "../../context/NavigationContext";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  ScreenContent,
-  FilterBar,
-  EmptyState,
-  QueryState,
-} from "../../components/common/ScreenContent";
-import {
-  useRestaurantQuery,
-  useRestaurantAction,
-} from "../../hooks/useRestaurantQuery";
+
+import { useScreenNavigation } from "../../context/NavigationContext";
+import { ScreenContent, FilterBar, EmptyState, QueryState } from "../../components/common/ScreenContent";
+import { useRestaurantQuery, useRestaurantAction } from "../../hooks/useRestaurantQuery";
 import { screenStyles } from "../../styles/screenStyles";
 import { displayTime } from "../../utils/format";
-import {
-  KitchenOrderCard,
-  KitchenStatusButton,
-} from "../../components/kitchen/KitchenCp";
+import { KitchenOrderCard, KitchenStatusButton } from "../../components/kitchen/KitchenCp";
 import { kitchenForScreen, advanceKitchenItem } from "../../db/screenDb";
 import { ORDER_FILTERS } from "../../utils/status";
 
@@ -29,7 +19,7 @@ export default function KQueueScreen() {
   const { run, busy } = useRestaurantAction();
   const filtered =
     query.data?.filter(
-      (order) => filter === "all" || order.status === filter,
+      (order) => filter === "all" || order.status === filter
     ) || [];
   const advance = (order) =>
     run(async () => {
@@ -56,14 +46,14 @@ export default function KQueueScreen() {
             <KitchenOrderCard
               order={{
                 ...order,
-                createdAt: displayTime(order.createdAt),
+                createdAt: displayTime(order.createdAt)
               }}
               onPress={() =>
                 navigation.open({
                   screen: "KDetailScreen",
                   params: {
-                    roundId: order.roundId,
-                  },
+                    roundId: order.roundId
+                  }
                 })
               }
             />

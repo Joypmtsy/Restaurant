@@ -1,17 +1,10 @@
 import React from "react";
 import { Text } from "react-native";
-import { useScreenNavigation } from "../../context/NavigationContext";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  ScreenContent,
-  EmptyState,
-  QueryState,
-} from "../../components/common/ScreenContent";
-import {
-  SectionCard,
-  InfoRow,
-  StatusBadge,
-} from "../../components/common/CommonCp";
+
+import { useScreenNavigation } from "../../context/NavigationContext";
+import { ScreenContent, EmptyState, QueryState } from "../../components/common/ScreenContent";
+import { SectionCard, InfoRow, StatusBadge } from "../../components/common/CommonCp";
 import { useRestaurantQuery } from "../../hooks/useRestaurantQuery";
 import { appStyles } from "../../styles/appStyles";
 import { screenStyles } from "../../styles/screenStyles";
@@ -27,7 +20,7 @@ export default function CBillScreen() {
   const query = useRestaurantQuery(
     () => billForScreen(db, billId),
     String(billId),
-    true,
+    true
   );
   const bill = query.data;
 
@@ -66,7 +59,7 @@ export default function CBillScreen() {
                       name: item.menu_name,
                       quantity: item.quantity,
                       priceAtOrder: item.price_at_order,
-                      note: item.note,
+                      note: item.note
                     }}
                   />
                 ))}
